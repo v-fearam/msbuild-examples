@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net5.0</TargetFramework>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<SettingFiles Remove="MyValues.mysettings" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AppSettingStronglyTyped" Version="1.0.6" />
+	</ItemGroup>
+
+	<PropertyGroup>
+		<SettingNamespace>MSBuildConsoleExample</SettingNamespace>
+	</PropertyGroup>	
+
+	<Target Name="DisplayMessages">
+		<Message Text="RootFolder = $(RootFolder)" />
+		<Message Text="SettingExtentionFile = $(SettingExtentionFile)" />
+		<Message Text="SettingFiles = @(SettingFiles)" />
+		<Message Text="MSBuildProjectDirectory = $(MSBuildProjectDirectory)" />
+	</Target>
+</Project>

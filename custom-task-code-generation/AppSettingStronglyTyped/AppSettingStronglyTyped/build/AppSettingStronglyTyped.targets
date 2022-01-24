@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+	<!--Defining all the text files input parameters-->
+	<ItemGroup>
+		<SettingFiles Include="$(RootFolder)\*.$(SettingExtentionFile)" />
+	</ItemGroup>
+
+	<!--It is generated a target which is executed before the compilation-->
+	<!--Input and Output is related to incremental build  https://docs.microsoft.com/visualstudio/msbuild/incremental-builds?view=vs-2022 -->
+	<!--It is built only if 1- Output doesn't exist or 2- Input is newer than output-->
+	<Target Name="GenerateSetting" BeforeTargets="CoreCompile" Inputs="@(SettingFiles)" Outputs="$(RootFolder)\$(SettingClass).generated.cs">
+		<!--Calling our custom task-->
+		<AppSettingStronglyTyped SettingClassName="$(SettingClass)" SettingNamespaceName="$(SettingNamespace)" SettingFiles="@(SettingFiles)">
+			<Output TaskParameter="ClassNameFile" PropertyName="SettingClassFileName" />
+		</AppSettingStronglyTyped>
+		<!--Our generated file is included to be compiled-->
+		<ItemGroup>
+			<Compile Remove="$(SettingClassFileName)" />
+			<Compile Include="$(SettingClassFileName)" />
+		</ItemGroup>
+	</Target>
+
+	<!--The generated file is deleted after a general clean. It will force the regeneration on rebuild-->
+	<Target Name="ForceReGenerateOnRebuild" AfterTargets="CoreClean">
+		<Delete Files="$(RootFolder)\$(SettingClass).generated.cs" />
+	</Target>
+</Project>

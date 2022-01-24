@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<!--defining properties intereting for my task-->
+	<PropertyGroup>
+		<!--default directory to publish .dll inside a nuget package-->
+		<taskForldername>lib</taskForldername>
+		<taskFramework>netstandard2.0</taskFramework>
+		<!--The folder where the custom task will be present. It points to inside the nuget package. It could be override during development time to get directly from the project compile directory -->
+		<CustomTasksFolder Condition="'$(CustomTasksFolder)' == ''">$(MSBuildThisFileDirectory)\..\$(taskForldername)\$(taskFramework)</CustomTasksFolder>
+		<!--Reference to the assembly which contains the MSBuild Task-->
+		<CustomTasksAssembly>$(CustomTasksFolder)\$(MSBuildThisFileName).dll</CustomTasksAssembly>
+	</PropertyGroup>
+
+	<!--If a project is going to run a task, MSBuild must know how to locate and run the assembly that contains the task class. Tasks are registered using the UsingTask element (MSBuild). TaskName is the class name and AssemblyFile the dll file path where the class is included-->
+	<UsingTask TaskName="$(MSBuildThisFileName).$(MSBuildThisFileName)" AssemblyFile="$(CustomTasksAssembly)"/>
+
+	<!--Task parameters default values, this can be overridden-->
+	<PropertyGroup>
+		<RootFolder Condition="'$(RootFolder)' == ''">$(MSBuildProjectDirectory)</RootFolder>
+		<SettingClass Condition="'$(SettingClass)' == ''">MySetting</SettingClass>
+		<SettingNamespace Condition="'$(SettingNamespace)' == ''">Example</SettingNamespace>
+		<SettingExtentionFile Condition="'$(SettingExtentionFile)' == ''">mysettings</SettingExtentionFile>
+	</PropertyGroup>
+</Project>

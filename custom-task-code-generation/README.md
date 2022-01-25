@@ -50,7 +50,7 @@ We are going use three parameters:
         public ITaskItem[] SettingFiles { get; set; }
 ```
 
-The task is going to process the _SettingFiles_ and generate a class 'SettingNamespaceName.SettingClassName'. The class will have a set of constants based on the file's content.  
+The task is going to process the _SettingFiles_ and generate a class 'SettingNamespaceName.SettingClassName'. The class will have a set of constants based on the text file's content.  
 The task output will be:
 
 ```c#
@@ -78,7 +78,7 @@ We need to override a Execute method. The execute method return true if the task
 
 Then, the details are really not important for our purpose. You can copy from the source code and improve if you like.
 
-:shipit:Food for thought. We are generating c# code as example.The task is like any other c# class, you could do whatever you want. For example sending an email, generating change log, reading github repository. This is the power of MSBuild custom tasks.
+:shipit:Food for thought. We are generating c# code during build process as example.The task is like any other c# class, you could do whatever you want. For example sending an email, generating change log, reading github repository. This is the power of MSBuild custom tasks.
 
 ### Step 3, Change the AppSettingStronglyTyped.csproj
 
@@ -105,12 +105,12 @@ We are going to generate a nuget package, so first we need to add some basic inf
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-	<version>1.0.0</version>
-	<title>AppSettingStronglyTyped</title>
-	<authors>Federico Arambarri</authors>
-	<description>Generates a strongly typed setting class base on a txt file</description>
-	<tags>MyTags</tags>
-	<copyright>Copyright © Company 2022</copyright>
+		<version>1.0.0</version>
+		<title>AppSettingStronglyTyped</title>
+		<authors>John Doe</authors>
+		<description>Generates a strongly typed setting class base on a txt file</description>
+		<tags>MyTags</tags>
+		<copyright>Copyright ©Microsoft Company 2022</copyright>
   </PropertyGroup>
 
   <ItemGroup>
@@ -129,10 +129,10 @@ Then, the dependencies of your MSBuild task must be packaged inside the package,
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<version>1.0.0</version>
 		<title>AppSettingStronglyTyped</title>
-		<authors>Federico Arambarri</authors>
+		<authors>John Doe</authors>
 		<description>Generates a strongly typed setting class base on a txt file</description>
 		<tags>MyTags</tags>
-		<copyright>Copyright © Company 2022</copyright>
+		<copyright>Copyright ©Microsoft Company 2022</copyright>
 		<!-- we need the assemblies bundled, so set this so we don't expose any dependencies to the outside world -->
 		<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
 		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
@@ -189,8 +189,8 @@ _AppSettingStronglyTyped.props_ includes the task and define some prop with defa
 		<!--default directory where the .dll was publich inside a nuget package-->
 		<taskForldername>lib</taskForldername>
 		<taskFramework>netstandard2.0</taskFramework>
-		<!--The folder where the custom task will be present. It points to inside the nuget package. It could be override during development time to get directly from the project compile directory -->
-		<CustomTasksFolder Condition="'$(CustomTasksFolder)' == ''">$(MSBuildThisFileDirectory)\..\$(taskForldername)\$(taskFramework)</CustomTasksFolder>
+		<!--The folder where the custom task will be present. It points to inside the nuget package. -->
+		<CustomTasksFolder>$(MSBuildThisFileDirectory)..\$(taskForldername)\$(taskFramework)</CustomTasksFolder>
 		<!--Reference to the assembly which contains the MSBuild Task-->
 		<CustomTasksAssembly>$(CustomTasksFolder)\$(MSBuildThisFileName).dll</CustomTasksAssembly>
 	</PropertyGroup>
@@ -202,7 +202,7 @@ _AppSettingStronglyTyped.props_ includes the task and define some prop with defa
 	<PropertyGroup>
 		<RootFolder Condition="'$(RootFolder)' == ''">$(MSBuildProjectDirectory)</RootFolder>
 		<SettingClass Condition="'$(SettingClass)' == ''">MySetting</SettingClass>
-		<SettingNamespace Condition="'$(SettingNamespace)' == ''">Example</SettingNamespace>
+		<SettingNamespace Condition="'$(SettingNamespace)' == ''">example</SettingNamespace>
 		<SettingExtensionFile Condition="'$(SettingExtensionFile)' == ''">mysettings</SettingExtensionFile>
 	</PropertyGroup>
 </Project>
@@ -222,7 +222,6 @@ The _AppSettingStronglyTyped.props_ will be automatically included when the pack
 	</ItemGroup>
 
 	<!--It is generated a target which is executed before the compilation-->
-	<!--It is built only if 1- Output doesn't exist or 2- Input is newer than output-->
 	<Target Name="BeforeCompile" Inputs="@(SettingFiles)" Outputs="$(RootFolder)\$(SettingClass).generated.cs">
 		<!--Calling our custom task-->
 		<AppSettingStronglyTyped SettingClassName="$(SettingClass)" SettingNamespaceName="$(SettingNamespace)" SettingFiles="@(SettingFiles)">
@@ -246,7 +245,7 @@ The first step is the creation of an [InputGroup](https://docs.microsoft.com/vis
 
 Then we define two [MSBuild targets](https://docs.microsoft.com/visualstudio/msbuild/msbuild-targets?view=vs-2022). We [extends the MSBuild process](https://docs.microsoft.com/visualstudio/msbuild/how-to-extend-the-visual-studio-build-process?view=vs-2022) overriding predefined targets:
 
-1. BeforeCompile: The goal is to call our custom task to generate the class and include the class to be compiled. Tasks that are inserted before core compilation is done. Input and Output field are related to [incremental build](https://docs.microsoft.com/visualstudio/msbuild/incremental-builds?view=vs-2022).If all output items are up-to-date, MSBuild skips the target. This incremental build of the target can significantly improve the build speed. An item is considered up-to-date if its output file is the same age or newer than its input file or files.
+1. BeforeCompile: The goal is to call our custom task to generate the class and include the class to be compiled. Tasks that are inserted before core compilation is done. Input and Output field are related to [incremental build](https://docs.microsoft.com/visualstudio/msbuild/incremental-builds?view=vs-2022). If all output items are up-to-date, MSBuild skips the target. This incremental build of the target can significantly improve the build speed. An item is considered up-to-date if its output file is the same age or newer than its input file or files.
 1. AfterClean: The goal is to delete the generated class file after a general clean happens.Tasks that are inserted after the core clean functionality is invoked. It force the generation on MSBuild rebuild target execution.
 
 ### Step 5, Generates the nuget package
@@ -302,7 +301,7 @@ We can execute the program, it will greet from our generated class.
 
 ### Step 7 (Optional), Check what is going on during build process
 
-It is possible to compile on using a command line command. We need to go to MSBuildConsoleExample\MSBuildConsoleExample folder.
+It is possible to compile using a command line command. We need to go to MSBuildConsoleExample\MSBuildConsoleExample folder.
 We are going to use -bl (binary log) option to generate a binary log. The binary log will have a very useful information to know what is going on during build process.
 
 ```dotnetcli
@@ -319,7 +318,7 @@ The option `/t:rebuild` means run the rebuild target. It will force the regenera
 ### Development
 
 During development and debugging it could be hard ship your custom task as nuget package.
-It could be easier to include all the information on .props and target directly on your MSBuildConsoleExample.csproj and then move to the nuget shipping format. 
+It could be easier to include all the information on .props and target directly on your MSBuildConsoleExample.csproj and then move to the nuget shipping format.
 For example (Note that the nuget is not referenced):
 
 ```xml

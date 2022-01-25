@@ -36,7 +36,7 @@ We need to include _Microsoft.Build.Utilities.Core_ nuget package, and the creat
 
 We are going use three parameters:
 
-```dotnet
+```c#
         //The name of the class which is going to be generated
         [Required]
         public string SettingClassName { get; set; }
@@ -53,7 +53,7 @@ We are going use three parameters:
 The task is going to process the _SettingFiles_ and generate a class 'SettingNamespaceName.SettingClassName'. The class will have a set of constants based on the file's content.  
 The task output will be:
 
-```dotnet
+```c#
         //The filename where the class was generated
         [Output]
         public string ClassNameFile { get; set; }
@@ -61,7 +61,7 @@ The task output will be:
 
 We need to override a Execute method. The execute method return true if the task was succeed and false other case. Task implements ITask and provides default implementations of some ITask members and additionally, logging is easier. It is important the log to know what is going on. And even more important if we are going to return not succeed (false). On error, we should use Log.LogError.
 
-```dotnet
+```c#
         public override bool Execute()
         {
             //Read the input files and return a IDictionary<string, object> with the properties to be created.
@@ -76,7 +76,9 @@ We need to override a Execute method. The execute method return true if the task
         }
 ```
 
-Then, the details are really not important for our purpose. You can copy from the source code and improve if you like.
+Then, the details are really not important for our purpose. You can copy from the source code and improve if you like.  
+
+:shipit:Food for thought. We are generating c# code as example.The task is like any other c# class, you could do whatever you want. For example sending an email, generating change log, reading github repository. This is the power of MSBuild custom tasks.
 
 ### Step 3, Change the AppSettingStronglyTyped.csproj
 
@@ -193,7 +195,7 @@ _AppSettingStronglyTyped.props_ includes the task and define some prop with defa
 		<CustomTasksAssembly>$(CustomTasksFolder)\$(MSBuildThisFileName).dll</CustomTasksAssembly>
 	</PropertyGroup>
 
-	<!--If a project is going to run a task, MSBuild must know how to locate and run the assembly that contains the task class. Tasks are registered using the UsingTask element (MSBuild). TaskName is the class name and AssemblyFile the dll file path where the class is included-->
+	<!--Register our custom task-->
 	<UsingTask TaskName="$(MSBuildThisFileName).$(MSBuildThisFileName)" AssemblyFile="$(CustomTasksAssembly)"/>
 
 	<!--Task parameters default values, this can be overridden-->
@@ -206,7 +208,7 @@ _AppSettingStronglyTyped.props_ includes the task and define some prop with defa
 </Project>
 ```
 
-Beyond the [build properties](https://docs.microsoft.com/visualstudio/msbuild/walkthrough-using-msbuild?view=vs-2022#build-properties) defined, actually, important part of this file is the task registration, MSBuild must know how to locate and run the assembly that contains the task class. Tasks are registered using the [UsingTask element (MSBuild)](https://docs.microsoft.com/visualstudio/msbuild/usingtask-element-msbuild?view=vs-2022).Taskname is the name of the task to reference from the assembly. This attribute should always specify full namespaces. AssemblyFile is the file path of the assembly.
+Beyond the [build properties](https://docs.microsoft.com/visualstudio/msbuild/walkthrough-using-msbuild?view=vs-2022#build-properties) defined, actually, an important part of this file is the task registration, MSBuild must know how to locate and run the assembly that contains the task class. Tasks are registered using the [UsingTask element (MSBuild)](https://docs.microsoft.com/visualstudio/msbuild/usingtask-element-msbuild?view=vs-2022). TaskName is the name of the task to reference from the assembly. This attribute should always specify full namespaces. AssemblyFile is the file path of the assembly.
 
 The _AppSettingStronglyTyped.props_ will be automatically included when the package is install, then our client has the task available and some default values. However, it is never used. In order to put this code in action we need to define some targets on _AppSettingStronglyTyped.targets_ file which also will be also automatically included when the package is install:
 
@@ -240,7 +242,7 @@ The _AppSettingStronglyTyped.props_ will be automatically included when the pack
 </Project>
 ```
 
-The first step is the creation of an [InputGroup](https://docs.microsoft.com/visualstudio/msbuild/msbuild-items?view=vs-2022) which represents the text files (it could be more than one) to read and it will be some of our task parameter. There are default for the location and the extension which we look for, but you can override the values defining the properties on the client msbuild project file.
+The first step is the creation of an [InputGroup](https://docs.microsoft.com/visualstudio/msbuild/msbuild-items?view=vs-2022) which represents the text files (it could be more than one) to read and it will be some of our task parameter. There are default for the location and the extension where we look for, but you can override the values defining the properties on the client msbuild project file.
 
 Then we define two [MSBuild targets](https://docs.microsoft.com/visualstudio/msbuild/msbuild-targets?view=vs-2022). We [extends the MSBuild process](https://docs.microsoft.com/visualstudio/msbuild/how-to-extend-the-visual-studio-build-process?view=vs-2022) overriding predefined targets:
 
@@ -261,39 +263,48 @@ Congrats!! You must have `\AppSettingStronglyTyped\AppSettingStronglyTyped\AppSe
 
 .nupkg files are a zip file. You can open with a zip tool. On build folder the .target and .props files must be present. On lib\netstandard2.0\ folder the .dll file mus be present. On the root must be AppSettingStronglyTyped.nuspec file.
 
-### Step 6, Generate console app to use the new MSBuild task
+### Step 6, Generate console app and test our new MSBuild task
 
-Create a standard .Net Core console app.
-We called MSBuildConsoleExample.
+Now, we are going to create a standard .Net Core console app for testing the nuget package generated.  
+We could called MSBuildConsoleExample the new project.  
+We must import the AppSettingStronglyTyped nuget. We need to define a new package source and define a local folder as package source, [please follow the instructions](https://docs.microsoft.com/nuget/consume-packages/install-use-packages-visual-studio#package-sources). Then copy our nuget on that folder and install on our console app.  
 
-Import the AppSettingStronglyTyped nuget.
+Then, we should rebuild to be sure every thing is ok.  
 
-rebuild to be sure every thing is ok
-
-create on the root MyValues.mysettings
-
+At this point we are going to create our text file with the extension defined to be discovered. Using the default extension we are going to create MyValues.mysettings on the root, and add the following content:
+```
 Greeting:string:Hello World!
+```
+Now, we are going to rebuild again and the magic should happens, the generated file must be there. If you are using the standards you must see _MySetting.generated.cs_ file on your solution.
 
-rebuild
-
-check the generated class MySetting.generated.cs
-
-re write the namespace, open csproj and add (your namespace)
-
+The class _MySetting_ is in the _example_ namespace, we are going to redefine to use our app namespace. Open csproj and add 
 ```
 	<PropertyGroup>
 		<SettingNamespace>MSBuildConsoleExample</SettingNamespace>
 	</PropertyGroup>
 ```
+Now, we are going to rebuild again and the class is on _MSBuildConsoleExample_ namespace. In this way you can redefine the generated class name(SettingClass), the text extension files(SettingExtensionFile) to be use as input and the location (RootFolder) of them if you like.
 
-rebuild
+Go to Program.cs and change the harcoded 'Hello Word!!' to our constant
+```c#
+        static void Main(string[] args)
+        {
+            Console.WriteLine(MySetting.Greeting);
+        }
+```
+We can execute the program, it will greet from our generated class.
 
-go to the program and change the console log
+### Step 7 (Optional), Check what is going on during build process
 
-Console.WriteLine(MySetting.Greeting);
+It is possible to compile on using a command line command. We need to go to MSBuildConsoleExample\MSBuildConsoleExample folder.
+We are going to use -bl (binary log) option to generate a binary log. The binary log will have a very useful information to know what is going on during build process.
 
-See that you compiled class works.
+```dotnetcli
+# Using Dotnet MSBuild (run core environment)
+dotnet build -bl 
 
--------you can try changing the default class name
-
----------read binary log
+# or Full MSBuild (run on net framework environment, this is used by Visual Studio)
+msbuild -bl 
+```
+Both of them will generate a log  msbuild.binlog, and it can be open with [this tool](https://msbuildlog.com/)
+The option `/t:rebuild` means run the rebuild target. It will force the regeneration.

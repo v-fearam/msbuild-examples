@@ -11,14 +11,14 @@
 		<CustomTasksAssembly>$(CustomTasksFolder)\$(MSBuildThisFileName).dll</CustomTasksAssembly>
 	</PropertyGroup>
 
-	<!--If a project is going to run a task, MSBuild must know how to locate and run the assembly that contains the task class. Tasks are registered using the UsingTask element (MSBuild). TaskName is the class name and AssemblyFile the dll file path where the class is included-->
+	<!--Register our custom task-->
 	<UsingTask TaskName="$(MSBuildThisFileName).$(MSBuildThisFileName)" AssemblyFile="$(CustomTasksAssembly)"/>
 
 	<!--Task parameters default values, this can be overridden-->
 	<PropertyGroup>
 		<RootFolder Condition="'$(RootFolder)' == ''">$(MSBuildProjectDirectory)</RootFolder>
 		<SettingClass Condition="'$(SettingClass)' == ''">MySetting</SettingClass>
-		<SettingNamespace Condition="'$(SettingNamespace)' == ''">Example</SettingNamespace>
+		<SettingNamespace Condition="'$(SettingNamespace)' == ''">example</SettingNamespace>
 		<SettingExtensionFile Condition="'$(SettingExtensionFile)' == ''">mysettings</SettingExtensionFile>
 	</PropertyGroup>
 </Project>

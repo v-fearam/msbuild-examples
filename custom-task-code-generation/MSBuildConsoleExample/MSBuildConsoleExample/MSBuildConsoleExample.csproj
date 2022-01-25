@@ -10,17 +10,10 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="AppSettingStronglyTyped" Version="1.0.6" />
+		<PackageReference Include="AppSettingStronglyTyped" Version="1.0.0" />
 	</ItemGroup>
 
 	<PropertyGroup>
 		<SettingNamespace>MSBuildConsoleExample</SettingNamespace>
 	</PropertyGroup>	
-
-	<Target Name="DisplayMessages">
-		<Message Text="RootFolder = $(RootFolder)" />
-		<Message Text="SettingExtentionFile = $(SettingExtentionFile)" />
-		<Message Text="SettingFiles = @(SettingFiles)" />
-		<Message Text="MSBuildProjectDirectory = $(MSBuildProjectDirectory)" />
-	</Target>
 </Project>

@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-	<!--defining properties intereting for my task-->
+	<!--defining properties interesting for my task-->
 	<PropertyGroup>
-		<!--default directory to publish .dll inside a nuget package-->
+		<!--default directory where the .dll was publich inside a nuget package-->
 		<taskForldername>lib</taskForldername>
 		<taskFramework>netstandard2.0</taskFramework>
 		<!--The folder where the custom task will be present. It points to inside the nuget package. It could be override during development time to get directly from the project compile directory -->
@@ -19,6 +19,6 @@
 		<RootFolder Condition="'$(RootFolder)' == ''">$(MSBuildProjectDirectory)</RootFolder>
 		<SettingClass Condition="'$(SettingClass)' == ''">MySetting</SettingClass>
 		<SettingNamespace Condition="'$(SettingNamespace)' == ''">Example</SettingNamespace>
-		<SettingExtentionFile Condition="'$(SettingExtentionFile)' == ''">mysettings</SettingExtentionFile>
+		<SettingExtensionFile Condition="'$(SettingExtensionFile)' == ''">mysettings</SettingExtensionFile>
 	</PropertyGroup>
 </Project>

@@ -27,7 +27,6 @@ namespace AppSettingStronglyTyped
 
         public override bool Execute()
         {
-            Log.LogMessage(MessageImportance.High, "The task AppSettingStronglyTyped was passed");
             //Read the input files and return a IDictionary<string, object> with the properties to be created. 
             //Any format error it will return not succeed and Log.LogError properly
             var (success, settings) = ReadProjectSettingFiles();

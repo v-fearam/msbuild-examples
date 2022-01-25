@@ -3,7 +3,7 @@
 This repo is created to include msbuild examples
 
 1. The first example is the creation of a custom task for code generation. The idea is to consume a txt file and generate code from it during build process. It is simple in order to show the mechanism, then you will be able to create more complex piece of code. Part of this effort includes how to ship and consume the custom task as nuget package.
-   [Please see the Custom Task-Code Generation Readme](./custom-task-code-generation/README.md)
+   [Please see the Custom Task-Code Generation Readme](./custom-task-code-generation/)
 
 1. Define how to test a custom task, unit and integration test
 

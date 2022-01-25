@@ -5,8 +5,8 @@
 		<!--default directory where the .dll was publich inside a nuget package-->
 		<taskForldername>lib</taskForldername>
 		<taskFramework>netstandard2.0</taskFramework>
-		<!--The folder where the custom task will be present. It points to inside the nuget package. It could be override during development time to get directly from the project compile directory -->
-		<CustomTasksFolder Condition="'$(CustomTasksFolder)' == ''">$(MSBuildThisFileDirectory)\..\$(taskForldername)\$(taskFramework)</CustomTasksFolder>
+		<!--The folder where the custom task will be present. It points to inside the nuget package. -->
+		<CustomTasksFolder>$(MSBuildThisFileDirectory)..\$(taskForldername)\$(taskFramework)</CustomTasksFolder>
 		<!--Reference to the assembly which contains the MSBuild Task-->
 		<CustomTasksAssembly>$(CustomTasksFolder)\$(MSBuildThisFileName).dll</CustomTasksAssembly>
 	</PropertyGroup>

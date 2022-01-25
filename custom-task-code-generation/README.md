@@ -76,7 +76,7 @@ We need to override a Execute method. The execute method return true if the task
         }
 ```
 
-Then, the details are really not important for our purpose. You can copy from the source code and improve if you like.  
+Then, the details are really not important for our purpose. You can copy from the source code and improve if you like.
 
 :shipit:Food for thought. We are generating c# code as example.The task is like any other c# class, you could do whatever you want. For example sending an email, generating change log, reading github repository. This is the power of MSBuild custom tasks.
 
@@ -247,7 +247,7 @@ The first step is the creation of an [InputGroup](https://docs.microsoft.com/vis
 Then we define two [MSBuild targets](https://docs.microsoft.com/visualstudio/msbuild/msbuild-targets?view=vs-2022). We [extends the MSBuild process](https://docs.microsoft.com/visualstudio/msbuild/how-to-extend-the-visual-studio-build-process?view=vs-2022) overriding predefined targets:
 
 1. BeforeCompile: The goal is to call our custom task to generate the class and include the class to be compiled. Tasks that are inserted before core compilation is done. Input and Output field are related to [incremental build](https://docs.microsoft.com/visualstudio/msbuild/incremental-builds?view=vs-2022).If all output items are up-to-date, MSBuild skips the target. This incremental build of the target can significantly improve the build speed. An item is considered up-to-date if its output file is the same age or newer than its input file or files.
-1. AfterClean: The goal is to delete the generated class file after a general clean happens.Tasks that are inserted after the core clean functionality is invoked. It force the generation on MSBuild rebuild target execution. 
+1. AfterClean: The goal is to delete the generated class file after a general clean happens.Tasks that are inserted after the core clean functionality is invoked. It force the generation on MSBuild rebuild target execution.
 
 ### Step 5, Generates the nuget package
 
@@ -267,31 +267,37 @@ Congrats!! You must have `\AppSettingStronglyTyped\AppSettingStronglyTyped\AppSe
 
 Now, we are going to create a standard .Net Core console app for testing the nuget package generated.  
 We could called MSBuildConsoleExample the new project.  
-We must import the AppSettingStronglyTyped nuget. We need to define a new package source and define a local folder as package source, [please follow the instructions](https://docs.microsoft.com/nuget/consume-packages/install-use-packages-visual-studio#package-sources). Then copy our nuget on that folder and install on our console app.  
+We must import the AppSettingStronglyTyped nuget. We need to define a new package source and define a local folder as package source, [please follow the instructions](https://docs.microsoft.com/nuget/consume-packages/install-use-packages-visual-studio#package-sources). Then copy our nuget on that folder and install on our console app.
 
-Then, we should rebuild to be sure every thing is ok.  
+Then, we should rebuild to be sure every thing is ok.
 
 At this point we are going to create our text file with the extension defined to be discovered. Using the default extension we are going to create MyValues.mysettings on the root, and add the following content:
+
 ```
 Greeting:string:Hello World!
 ```
+
 Now, we are going to rebuild again and the magic should happens, the generated file must be there. If you are using the standards you must see _MySetting.generated.cs_ file on your solution.
 
-The class _MySetting_ is in the _example_ namespace, we are going to redefine to use our app namespace. Open csproj and add 
+The class _MySetting_ is in the _example_ namespace, we are going to redefine to use our app namespace. Open csproj and add
+
 ```
 	<PropertyGroup>
 		<SettingNamespace>MSBuildConsoleExample</SettingNamespace>
 	</PropertyGroup>
 ```
+
 Now, we are going to rebuild again and the class is on _MSBuildConsoleExample_ namespace. In this way you can redefine the generated class name(SettingClass), the text extension files(SettingExtensionFile) to be use as input and the location (RootFolder) of them if you like.
 
 Go to Program.cs and change the harcoded 'Hello Word!!' to our constant
+
 ```c#
         static void Main(string[] args)
         {
             Console.WriteLine(MySetting.Greeting);
         }
 ```
+
 We can execute the program, it will greet from our generated class.
 
 ### Step 7 (Optional), Check what is going on during build process
@@ -301,10 +307,50 @@ We are going to use -bl (binary log) option to generate a binary log. The binary
 
 ```dotnetcli
 # Using Dotnet MSBuild (run core environment)
-dotnet build -bl 
+dotnet build -bl
 
 # or Full MSBuild (run on net framework environment, this is used by Visual Studio)
-msbuild -bl 
+msbuild -bl
 ```
-Both of them will generate a log  msbuild.binlog, and it can be open with [this tool](https://msbuildlog.com/)
+
+Both of them will generate a log msbuild.binlog, and it can be open with [this tool](https://msbuildlog.com/)
 The option `/t:rebuild` means run the rebuild target. It will force the regeneration.
+
+### Development
+
+During development and debugging it could be hard ship your custom task as nuget package.
+It could be easier to include all the information on .props and target directly on your MSBuildConsoleExample.csproj and then move to the nuget shipping format. 
+For example (Note that the nuget is not referenced):
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+	<UsingTask TaskName="AppSettingStronglyTyped.AppSettingStronglyTyped" AssemblyFile="..\..\AppSettingStronglyTyped\AppSettingStronglyTyped\bin\Debug\netstandard2.0\AppSettingStronglyTyped.dll"/>
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net5.0</TargetFramework>
+		<RootFolder>$(MSBuildProjectDirectory)</RootFolder>
+		<SettingClass>MySetting</SettingClass>
+		<SettingNamespace>MSBuildConsoleExample</SettingNamespace>
+		<SettingExtensionFile>mysettings</SettingExtensionFile>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<SettingFiles Include="$(RootFolder)\*.mysettings" />
+	</ItemGroup>
+
+	<Target Name="GenerateSetting" BeforeTargets="CoreCompile" Inputs="@(SettingFiles)" Outputs="$(RootFolder)\$(SettingClass).generated.cs">
+		<AppSettingStronglyTyped SettingClassName="$(SettingClass)" SettingNamespaceName="$(SettingNamespace)" SettingFiles="@(SettingFiles)">
+			<Output TaskParameter="ClassNameFile" PropertyName="SettingClassFileName" />
+		</AppSettingStronglyTyped>
+		<ItemGroup>
+			<Compile Remove="$(SettingClassFileName)" />
+			<Compile Include="$(SettingClassFileName)" />
+		</ItemGroup>
+	</Target>
+
+	<Target Name="ForceReGenerateOnRebuild" AfterTargets="CoreClean">
+		<Delete Files="$(RootFolder)\$(SettingClass).generated.cs" />
+	</Target>
+</Project>
+```

@@ -353,3 +353,5 @@ For example (Note that the nuget is not referenced):
 	</Target>
 </Project>
 ```
+
+_Note:_ You can notice we are using another way to order the targets [(BeforeTarget and AfterTarget)](https://docs.microsoft.com/visualstudio/msbuild/target-build-order?view=vs-2022#beforetargets-and-aftertargets). The note on [override predefined targets](https://docs.microsoft.com/visualstudio/msbuild/how-to-extend-the-visual-studio-build-process?view=vs-2022#override-predefined-targets) section on the msbuild extension article on the says: 'SDK-style projects have an implicit import of targets after the last line of the project file. This means that you cannot override default targets unless you specify your imports manually'.

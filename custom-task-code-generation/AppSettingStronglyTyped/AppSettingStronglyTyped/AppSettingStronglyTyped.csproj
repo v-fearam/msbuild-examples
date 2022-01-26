@@ -27,7 +27,6 @@
 		<Content Include="build\AppSettingStronglyTyped.targets" PackagePath="build\" />
 	</ItemGroup>
 	
-
 	<Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
 		<ItemGroup>
 			<!-- the dependencies of your MSBuild task must be packaged inside the package, they cannot be expressed as normal PackageReferences -->

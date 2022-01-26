@@ -265,7 +265,8 @@ Congrats!! You must have `\AppSettingStronglyTyped\AppSettingStronglyTyped\AppSe
 ### Step 6, Generate console app and test our new MSBuild task
 
 Now, we are going to create a standard .Net Core console app for testing the nuget package generated.  
-We could called MSBuildConsoleExample the new project.  
+:warning: We need to avoid generating a MSBuild custom task in the same MSBuild process which is going to consume it. The new project should be in a complete different Visual Studio Solution or the new project use a dll pre-generated and re-located from the standard output.  
+We could called MSBuildConsoleExample the new project on a new Visual Studio Solution.
 We must import the AppSettingStronglyTyped nuget. We need to define a new package source and define a local folder as package source, [please follow the instructions](https://docs.microsoft.com/nuget/consume-packages/install-use-packages-visual-studio#package-sources). Then copy our nuget on that folder and install on our console app.
 
 Then, we should rebuild to be sure every thing is ok.

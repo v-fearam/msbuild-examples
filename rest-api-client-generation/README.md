@@ -82,7 +82,7 @@ The complete code version is in this PetReaderExecTaskExample folder, you can do
 
 - Congrats!! Now, you can execute the program to see how it working
 
-## Option 2: Use pre defined MSBuid Tool Task
+## Option 2: Use the Custom task derived from MSBuid Tool Task
 
 In many cases the option 1 is good enough to execute external tools to do something, like Rest Api Client Code Generation.
 We are going to continue with the same example, but the ideas can be used for others examples.  

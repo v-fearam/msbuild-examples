@@ -13,7 +13,7 @@ We will use the ["Exec" MSBuild task](https://docs.microsoft.com/dotnet/api/micr
 
 NSwag code generation is possible to be used from MSBuild, by [NSwag.MSBuild](https://github.com/RicoSuter/NSwag/wiki/NSwag.MSBuild)
 
-The complete code version is in this folder, you can download and take a look. Anyway, we are going to go through step by step and explain some concept on the way.
+The complete code version is in this PetReaderExecTaskExample folder, you can download and take a look. Anyway, we are going to go through step by step and explain some concept on the way.
 
 - We are going to create a new console application on Visual Studio named PetReaderExecTaskExample. We use Net5.
 - Create another project in the same solution: PetShopRestClient (This is going to contain the generated client as a Library). We use netstandard 2.1. The generated client doesn't compile on netstandard 2.0.

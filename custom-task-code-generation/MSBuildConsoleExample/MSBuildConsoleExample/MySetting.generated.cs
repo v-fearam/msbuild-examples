@@ -2,7 +2,7 @@
  namespace MSBuildConsoleExample { 
 
   public class MySetting {
-    public readonly static string  Greeting = "Hello World!";
+    public readonly static string  Greeting = "Hello World!1";
   }
 
 }

@@ -260,7 +260,10 @@ The complete code version is in this PetReaderToolTaskExample folder, you can do
 
 Select "PetReaderToolTaskConsoleApp" and rebuild only that project. You will get the "Error URL is not allowed PetRestApiClient"
 
+_Note:_ If you like to publish your custom task as nuget package, please read the [Custom task code generation](../custom-task-code-generation/) example.
+
 #### Downloading code
 
-We need to install [NSwag command line tool](https://github.com/RicoSuter/NSwag/releases). Then we need the full path to the directory where NSwag.exe is located. Then, edit PetRestApiClient.csproj selecting the proper NSwagCommandFullPath value based on your computer.
-Select "RestApiClientGenerator" and build only that project, and finally select and rebuild "PetReaderToolTaskConsoleApp". You can execute "PetReaderToolTaskConsoleApp".
+We need to install [NSwag command line tool](https://github.com/RicoSuter/NSwag/releases). Then,  we need the full path to the directory where NSwag.exe is located. After that, edit PetRestApiClient.csproj selecting the proper NSwagCommandFullPath value based on your computer.
+Finally, select "RestApiClientGenerator" and build only that project, and finally select and rebuild "PetReaderToolTaskConsoleApp".  
+You can execute "PetReaderToolTaskConsoleApp".

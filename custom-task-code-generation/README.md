@@ -328,7 +328,7 @@ For example (Note that the nuget is not referenced):
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>net5.0</TargetFramework>
+		<TargetFramework>net6.0</TargetFramework>
 		<RootFolder>$(MSBuildProjectDirectory)</RootFolder>
 		<SettingClass>MySetting</SettingClass>
 		<SettingNamespace>MSBuildConsoleExample</SettingNamespace>

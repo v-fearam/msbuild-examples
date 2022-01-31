@@ -182,7 +182,7 @@ The complete code version is in this PetReaderToolTaskExample folder, you can do
 - Build the project, everything should compile.
 - Create a console app to use our new MSBuild Task
 
-  - Create a Console App, we will call "PetReaderToolTaskConsoleApp". We are going to use Net5 in our case. Mark it as startup project
+  - Create a Console App, we will call "PetReaderToolTaskConsoleApp". We are going to use net6.0 in our case. Mark it as startup project
   - Create a Library project to generate the code, called "PetRestApiClient". NetStandard2.1
   - On "PetReaderToolTaskConsoleApp" create dependency to "PetRestApiClient"
   - On PetRestApiClient project create a folder "PetRestApiClient", this folder will contain the generated code and delete Class1.cs automatically generated.

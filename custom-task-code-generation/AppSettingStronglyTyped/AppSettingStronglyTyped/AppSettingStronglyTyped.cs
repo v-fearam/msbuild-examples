@@ -49,6 +49,7 @@ namespace AppSettingStronglyTyped
                     var lineParse = line.Split(':');
                     if (lineParse.Length != 3)
                     {
+                        Log.LogError("Incorrect line format. Valid format prop:type:defaultvalue");
                         return (false, null);
                     }
                     var value = GetValue(lineParse[1], lineParse[2]);

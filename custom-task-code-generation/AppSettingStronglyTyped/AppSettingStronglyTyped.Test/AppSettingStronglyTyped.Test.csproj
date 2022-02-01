@@ -20,6 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="Resources\notvalidvalue-prop.setting">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Resources\notvalidtype-prop.setting">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Update="Resources\bool-prop-class.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

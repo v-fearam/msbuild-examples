@@ -10,6 +10,8 @@ namespace RestApiClientGenerator.Test
     [TestClass]
     public class RestApiClientGeneratorTest
     {
+        private const string NSWAG_FOLDER = "C:\\Nwag\\Win";
+
         [TestMethod]
         public void SpecAsFile_GeneratesTheClient()
         {
@@ -20,7 +22,7 @@ namespace RestApiClientGenerator.Test
                 ClientClassName = "MyClient",
                 ClientNamespaceName = "MyNamespace",
                 FolderClientClass = ".",
-                NSwagCommandFullPath = "C:\\Users\\far\\Downloads\\Win"
+                NSwagCommandFullPath = NSWAG_FOLDER
             };
             var buildEngine = new Mock<IBuildEngine>();
             var errors = new List<BuildErrorEventArgs>();
@@ -46,7 +48,7 @@ namespace RestApiClientGenerator.Test
                 ClientClassName = "BadSpec",
                 ClientNamespaceName = "MyNamespace",
                 FolderClientClass = ".",
-                NSwagCommandFullPath = "C:\\Users\\far\\Downloads\\Win"
+                NSwagCommandFullPath = NSWAG_FOLDER
             };
             var buildEngine = new Mock<IBuildEngine>();
             var errors = new List<BuildErrorEventArgs>();
@@ -60,7 +62,7 @@ namespace RestApiClientGenerator.Test
             Assert.IsFalse(result);
             Assert.AreEqual(errors.Count, 1);
             Assert.IsFalse(File.Exists($"{restApiClientGenerator.FolderClientClass}\\{restApiClientGenerator.ClientClassName}.cs"));
-            Assert.AreEqual("\"RestApiClientGenerator\" exited with code - 1.", errors.First().Message);   
+            Assert.AreEqual("\"RestApiClientGenerator\" exited with code -1.", errors.First().Message);
         }
 
         [TestMethod]
@@ -73,7 +75,7 @@ namespace RestApiClientGenerator.Test
                 ClientClassName = "ClientNotGenerated",
                 ClientNamespaceName = "MyNamespace",
                 FolderClientClass = ".",
-                NSwagCommandFullPath = "C:\\Users\\far\\Downloads\\Win"
+                NSwagCommandFullPath = NSWAG_FOLDER
             };
             var buildEngine = new Mock<IBuildEngine>();
             var errors = new List<BuildErrorEventArgs>();

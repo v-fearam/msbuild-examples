@@ -11,7 +11,7 @@
 		<PetClientClientNamespaceName>PetRestApiClient</PetClientClientNamespaceName>
 		<PetClientFolderClientClass>PetRestApiClient</PetClientFolderClientClass>
 		<!--The directory where NSawg.exe is in-->
-		<NSwagCommandFullPath>C:\Users\far\Downloads\Win</NSwagCommandFullPath>
+		<NSwagCommandFullPath>C:\Nwag\Win</NSwagCommandFullPath>
 	</PropertyGroup>
 
 	<ItemGroup>

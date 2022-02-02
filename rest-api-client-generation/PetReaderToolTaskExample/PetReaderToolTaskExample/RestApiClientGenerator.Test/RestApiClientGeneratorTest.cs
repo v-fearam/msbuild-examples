@@ -12,6 +12,17 @@ namespace RestApiClientGenerator.Test
     {
         private const string NSWAG_FOLDER = "C:\\Nwag\\Win";
 
+        private Mock<IBuildEngine> buildEngine;
+        private List<BuildErrorEventArgs> errors;
+
+        [TestInitialize()]
+        public void Startup()
+        {
+            buildEngine = new Mock<IBuildEngine>();
+            errors = new List<BuildErrorEventArgs>();
+            buildEngine.Setup(x => x.LogErrorEvent(It.IsAny<BuildErrorEventArgs>())).Callback<BuildErrorEventArgs>(e => errors.Add(e));
+        }
+
         [TestMethod]
         public void SpecAsFile_GeneratesTheClient()
         {
@@ -24,9 +35,6 @@ namespace RestApiClientGenerator.Test
                 FolderClientClass = ".",
                 NSwagCommandFullPath = NSWAG_FOLDER
             };
-            var buildEngine = new Mock<IBuildEngine>();
-            var errors = new List<BuildErrorEventArgs>();
-            buildEngine.Setup(x => x.LogErrorEvent(It.IsAny<BuildErrorEventArgs>())).Callback<BuildErrorEventArgs>(e => errors.Add(e)); ;
             restApiClientGenerator.BuildEngine = buildEngine.Object;
 
             //act
@@ -50,9 +58,6 @@ namespace RestApiClientGenerator.Test
                 FolderClientClass = ".",
                 NSwagCommandFullPath = NSWAG_FOLDER
             };
-            var buildEngine = new Mock<IBuildEngine>();
-            var errors = new List<BuildErrorEventArgs>();
-            buildEngine.Setup(x => x.LogErrorEvent(It.IsAny<BuildErrorEventArgs>())).Callback<BuildErrorEventArgs>(e => errors.Add(e)); ;
             restApiClientGenerator.BuildEngine = buildEngine.Object;
 
             //act
@@ -77,9 +82,6 @@ namespace RestApiClientGenerator.Test
                 FolderClientClass = ".",
                 NSwagCommandFullPath = NSWAG_FOLDER
             };
-            var buildEngine = new Mock<IBuildEngine>();
-            var errors = new List<BuildErrorEventArgs>();
-            buildEngine.Setup(x => x.LogErrorEvent(It.IsAny<BuildErrorEventArgs>())).Callback<BuildErrorEventArgs>(e => errors.Add(e)); ;
             restApiClientGenerator.BuildEngine = buildEngine.Object;
 
             //act

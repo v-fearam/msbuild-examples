@@ -4,10 +4,10 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace RestApiClientGenerator.Test
+namespace AppSettingStronglyTyped.Test
 {
     [TestClass]
-    public class RestApiClientGeneratorIntegrationTest
+    public class AppSettingStronglyTypedIntegrationTest
     {
         public const string MSBUILD = "C:\\Program Files\\dotnet\\dotnet.exe";
 
@@ -32,32 +32,33 @@ namespace RestApiClientGenerator.Test
         }
 
         [TestMethod]
-        public void executeSuccessBuildFromFile()
+        public void ValidSettingTextFile_SettingClassGenerated()
         {
             //Arrage
-            buildProcess.StartInfo.Arguments = "build .\\Resources\\testscript-success.msbuild /t:generatePetClient";
+            buildProcess.StartInfo.Arguments = "build .\\Resources\\testscript-success.msbuild /t:generateSettingClass";
 
             //Act
             ExecuteCommandAndCollectResults();
 
             //Assert
             Assert.AreEqual(0, buildProcess.ExitCode);
-            Assert.IsTrue(File.Exists("PetRestApiClientSuccess.cs"));
+            Assert.IsTrue(File.Exists(".\\Resources\\MySettingSuccess.generated.cs"));
+            Assert.IsTrue(File.ReadLines(".\\Resources\\MySettingSuccess.generated.cs").SequenceEqual(File.ReadLines(".\\Resources\\testscript-success-class.txt")));
         }
 
         [TestMethod]
-        public void executeFailValidationBuildFromFile()
+        public void NotValidSettingTextFile_SettingClassNotGenerated()
         {
             //Arrage
-            buildProcess.StartInfo.Arguments = "build .\\Resources\\testscript-fail.msbuild /t:generatePetClient";
+            buildProcess.StartInfo.Arguments = "build .\\Resources\\testscript-fail.msbuild /t:generateSettingClass";
 
             //Act
             ExecuteCommandAndCollectResults();
 
             //Assert
             Assert.AreEqual(1, buildProcess.ExitCode);
-            Assert.IsFalse(File.Exists("PetRestApiClientFail.cs"));
-            Assert.IsTrue(output.Any(line => line.Contains("URL is not allowed")));
+            Assert.IsFalse(File.Exists(".\\Resources\\MySettingFail.generated.cs"));
+            Assert.IsTrue(output.Any(line => line.Contains("Type not supported -> car")));
         }
 
         private void ExecuteCommandAndCollectResults()

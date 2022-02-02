@@ -10,14 +10,22 @@ namespace AppSettingStronglyTyped.Test
     [TestClass]
     public class AppSettingStronglyTypedTest
     {
+        private Mock<IBuildEngine> buildEngine;
+        private List<BuildErrorEventArgs> errors;
+
+        [TestInitialize()]
+        public void Startup()
+        {
+            buildEngine = new Mock<IBuildEngine>();
+            errors = new List<BuildErrorEventArgs>();
+            buildEngine.Setup(x => x.LogErrorEvent(It.IsAny<BuildErrorEventArgs>())).Callback<BuildErrorEventArgs>(e => errors.Add(e)); 
+        }
+
         [TestMethod]
         public void EmptySettingFileList_EmptyClassGenerated()
         {
             //arrange
             var appSettingStronglyTyped = new AppSettingStronglyTyped { SettingClassName = "MySettingEmpty", SettingNamespaceName = "MyNamespace", SettingFiles = new ITaskItem[0] };
-            var buildEngine = new Mock<IBuildEngine>();
-            var errors = new List<BuildErrorEventArgs>();
-            buildEngine.Setup(x => x.LogErrorEvent(It.IsAny<BuildErrorEventArgs>())).Callback<BuildErrorEventArgs>(e => errors.Add(e)); ;
             appSettingStronglyTyped.BuildEngine = buildEngine.Object;
 
             //act
@@ -38,9 +46,6 @@ namespace AppSettingStronglyTyped.Test
             var item = new Mock<ITaskItem>();
             item.Setup(x => x.GetMetadata("Identity")).Returns(".\\Resources\\error-prop.setting");
             var appSettingStronglyTyped = new AppSettingStronglyTyped { SettingClassName = "ErrorPropSetting", SettingNamespaceName = "MyNamespace", SettingFiles = new[] { item.Object } };
-            var buildEngine = new Mock<IBuildEngine>();
-            var errors = new List<BuildErrorEventArgs>();
-            buildEngine.Setup(x => x.LogErrorEvent(It.IsAny<BuildErrorEventArgs>())).Callback<BuildErrorEventArgs>(e => errors.Add(e)); ;
             appSettingStronglyTyped.BuildEngine = buildEngine.Object;
 
             //act
@@ -60,9 +65,6 @@ namespace AppSettingStronglyTyped.Test
             var item = new Mock<ITaskItem>();
             item.Setup(x => x.GetMetadata("Identity")).Returns(".\\Resources\\notvalidtype-prop.setting");
             var appSettingStronglyTyped = new AppSettingStronglyTyped { SettingClassName = "ErrorPropSetting", SettingNamespaceName = "MyNamespace", SettingFiles = new[] { item.Object } };
-            var buildEngine = new Mock<IBuildEngine>();
-            var errors = new List<BuildErrorEventArgs>();
-            buildEngine.Setup(x => x.LogErrorEvent(It.IsAny<BuildErrorEventArgs>())).Callback<BuildErrorEventArgs>(e => errors.Add(e)); ;
             appSettingStronglyTyped.BuildEngine = buildEngine.Object;
 
             //act
@@ -82,9 +84,6 @@ namespace AppSettingStronglyTyped.Test
             var item = new Mock<ITaskItem>();
             item.Setup(x => x.GetMetadata("Identity")).Returns(".\\Resources\\notvalidvalue-prop.setting");
             var appSettingStronglyTyped = new AppSettingStronglyTyped { SettingClassName = "ErrorPropSetting", SettingNamespaceName = "MyNamespace", SettingFiles = new[] { item.Object } };
-            var buildEngine = new Mock<IBuildEngine>();
-            var errors = new List<BuildErrorEventArgs>();
-            buildEngine.Setup(x => x.LogErrorEvent(It.IsAny<BuildErrorEventArgs>())).Callback<BuildErrorEventArgs>(e => errors.Add(e)); ;
             appSettingStronglyTyped.BuildEngine = buildEngine.Object;
 
             //act
@@ -109,9 +108,6 @@ namespace AppSettingStronglyTyped.Test
             var item = new Mock<ITaskItem>();
             item.Setup(x => x.GetMetadata("Identity")).Returns($".\\Resources\\{value}-prop.setting");
             var appSettingStronglyTyped = new AppSettingStronglyTyped { SettingClassName = $"My{value}PropSetting", SettingNamespaceName = "MyNamespace", SettingFiles = new[] { item.Object } };
-            var buildEngine = new Mock<IBuildEngine>();
-            var errors = new List<BuildErrorEventArgs>();
-            buildEngine.Setup(x => x.LogErrorEvent(It.IsAny<BuildErrorEventArgs>())).Callback<BuildErrorEventArgs>(e => errors.Add(e)); ;
             appSettingStronglyTyped.BuildEngine = buildEngine.Object;
 
             //act
@@ -132,9 +128,6 @@ namespace AppSettingStronglyTyped.Test
             var item = new Mock<ITaskItem>();
             item.Setup(x => x.GetMetadata("Identity")).Returns($".\\Resources\\complete-prop.setting");
             var appSettingStronglyTyped = new AppSettingStronglyTyped { SettingClassName = $"MyCompletePropSetting", SettingNamespaceName = "MyNamespace", SettingFiles = new[] { item.Object } };
-            var buildEngine = new Mock<IBuildEngine>();
-            var errors = new List<BuildErrorEventArgs>();
-            buildEngine.Setup(x => x.LogErrorEvent(It.IsAny<BuildErrorEventArgs>())).Callback<BuildErrorEventArgs>(e => errors.Add(e)); ;
             appSettingStronglyTyped.BuildEngine = buildEngine.Object;
 
             //act
@@ -145,7 +138,7 @@ namespace AppSettingStronglyTyped.Test
             Assert.AreEqual(errors.Count, 0);
             Assert.AreEqual($"MyCompletePropSetting.generated.cs", appSettingStronglyTyped.ClassNameFile);
             Assert.AreEqual(true, File.Exists(appSettingStronglyTyped.ClassNameFile));
-            Assert.IsTrue(File.ReadLines(appSettingStronglyTyped.ClassNameFile).SequenceEqual(File.ReadLines($".\\Resources\\complete-prop-class.txt")));
+            Assert.IsTrue(File.ReadLines(appSettingStronglyTyped.ClassNameFile).SequenceEqual(File.ReadLines(".\\Resources\\complete-prop-class.txt")));
         }
 
     }

@@ -11,8 +11,10 @@ namespace AppSettingStronglyTyped.Test
     {
         public const string MSBUILD = "C:\\Program Files\\dotnet\\dotnet.exe";
 
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         private Process buildProcess;
         private List<string> output;
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
 
         [TestInitialize()]
         public void Startup()

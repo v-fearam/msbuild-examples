@@ -13,6 +13,6 @@ This repo is created to include msbuild examples
 
    [Please see the Rest-Api client Generation Readme](./rest-api-client-generation/)
 
-1. :construction: :thinking: Define how to test a custom task, unit and integration test
+1. :construction: [How to test a MSBuild Custom Task](./Test.README.md)
 
 1. :thinking: Investigate some action not related to code generation, for example send an email and used if some situation is detected.

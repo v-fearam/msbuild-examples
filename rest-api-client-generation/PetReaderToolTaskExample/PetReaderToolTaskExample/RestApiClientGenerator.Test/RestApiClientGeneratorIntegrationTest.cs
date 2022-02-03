@@ -45,6 +45,9 @@ namespace RestApiClientGenerator.Test
             //Assert
             Assert.AreEqual(0, buildProcess.ExitCode);
             Assert.IsTrue(File.Exists("PetRestApiClientSuccess.cs"));
+
+            //creanup
+            File.Delete("PetRestApiClientSuccess.cs");
         }
 
         [TestMethod]

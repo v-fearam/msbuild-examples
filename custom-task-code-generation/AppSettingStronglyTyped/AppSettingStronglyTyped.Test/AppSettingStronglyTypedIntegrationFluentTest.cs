@@ -38,6 +38,9 @@ namespace AppSettingStronglyTyped.Test
             Assert.IsTrue(success);
             Assert.IsTrue(File.Exists("SettingSuccessFluent.generated.cs"));
             Assert.IsTrue(File.ReadLines(".\\SettingSuccessFluent.generated.cs").SequenceEqual(File.ReadLines(".\\Resources\\success-fluent-success-class.txt")));
+
+            //creanup
+            File.Delete("SettingSuccessFluent.generated.cs");
         }
 
         [TestMethod]

@@ -39,6 +39,9 @@ namespace AppSettingStronglyTyped.Test
             Assert.AreEqual("MySettingEmpty.generated.cs", appSettingStronglyTyped.ClassNameFile);
             Assert.IsTrue(File.Exists(appSettingStronglyTyped.ClassNameFile));
             Assert.IsTrue(File.ReadLines(appSettingStronglyTyped.ClassNameFile).SequenceEqual(File.ReadLines(".\\Resources\\empty-class.txt")));
+
+            //creanup
+            File.Delete(appSettingStronglyTyped.ClassNameFile);
         }
 
         [TestMethod]
@@ -119,8 +122,11 @@ namespace AppSettingStronglyTyped.Test
             Assert.IsTrue(success);
             Assert.AreEqual(errors.Count, 0);
             Assert.AreEqual($"My{value}PropSetting.generated.cs", appSettingStronglyTyped.ClassNameFile);
-            Assert.AreEqual(true, File.Exists(appSettingStronglyTyped.ClassNameFile));
+            Assert.IsTrue(File.Exists(appSettingStronglyTyped.ClassNameFile));
             Assert.IsTrue(File.ReadLines(appSettingStronglyTyped.ClassNameFile).SequenceEqual(File.ReadLines($".\\Resources\\{value}-prop-class.txt")));
+
+            //creanup
+            File.Delete(appSettingStronglyTyped.ClassNameFile);
         }
 
         [DataTestMethod]
@@ -139,8 +145,11 @@ namespace AppSettingStronglyTyped.Test
             Assert.IsTrue(success);
             Assert.AreEqual(errors.Count, 0);
             Assert.AreEqual($"MyCompletePropSetting.generated.cs", appSettingStronglyTyped.ClassNameFile);
-            Assert.AreEqual(true, File.Exists(appSettingStronglyTyped.ClassNameFile));
+            Assert.IsTrue(File.Exists(appSettingStronglyTyped.ClassNameFile));
             Assert.IsTrue(File.ReadLines(appSettingStronglyTyped.ClassNameFile).SequenceEqual(File.ReadLines(".\\Resources\\complete-prop-class.txt")));
+
+            //creanup
+            File.Delete(appSettingStronglyTyped.ClassNameFile);
         }
 
     }

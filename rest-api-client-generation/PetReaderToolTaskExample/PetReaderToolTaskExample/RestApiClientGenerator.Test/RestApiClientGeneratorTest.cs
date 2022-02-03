@@ -46,6 +46,9 @@ namespace RestApiClientGenerator.Test
             Assert.IsTrue(result);
             Assert.AreEqual(errors.Count, 0);
             Assert.IsTrue(File.Exists($"{restApiClientGenerator.FolderClientClass}\\{restApiClientGenerator.ClientClassName}.cs"));
+
+            //creanup
+            File.Delete($"{restApiClientGenerator.FolderClientClass}\\{restApiClientGenerator.ClientClassName}.cs");
         }
 
         [TestMethod]

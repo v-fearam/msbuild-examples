@@ -14,8 +14,8 @@ A MSBuild Custom Task is a class which inherit from MSBuild Task (directly or in
 We have some input values (parameters), and output parameters which we will be able to assert.  
 In our case some input parameter are path to files, so we generated test input files on a folder called _Resources_. Our MSBuild task also generates files, so we are going to assert the generated files.
 
-:white_check_mark: A build engine is needed, a class which implements [IBuildEngine](https://docs.microsoft.com/dotnet/api/microsoft.build.framework.ibuildengine?view=msbuild-17-netcore). In our example we created a mock using [Moq](https://github.com/Moq/moq4/wiki/Quickstart), but you can use other mock tool. I was interesting on collecting the errors, but you can collect another information and then assert it.  
-The Engine Mock is needed on all the tests, so it was included as _TestInitialize_ (it is going to be executed before each test, and each test will have its own build engine). [Complete example](.\custom-task-code-generation\AppSettingStronglyTyped\AppSettingStronglyTyped.Test\AppSettingStronglyTypedTest.cs)
+:white*check_mark: A build engine is needed, a class which implements [IBuildEngine](https://docs.microsoft.com/dotnet/api/microsoft.build.framework.ibuildengine?view=msbuild-17-netcore). In our example we created a mock using [Moq](https://github.com/Moq/moq4/wiki/Quickstart), but you can use other mock tool. I was interesting on collecting the errors, but you can collect another information and then assert it.  
+The Engine Mock is needed on all the tests, so it was included as \_TestInitialize* (it is going to be executed before each test, and each test will have its own build engine). [Complete example](.\custom-task-code-generation\AppSettingStronglyTyped\AppSettingStronglyTyped.Test\AppSettingStronglyTypedTest.cs)
 
 ```c#
        private Mock<IBuildEngine> buildEngine;
@@ -63,7 +63,156 @@ Last but not least, we need to assert the expected outcome from our test
    Assert.IsTrue(File.ReadLines(appSettingStronglyTyped.ClassNameFile).SequenceEqual(File.ReadLines(".\\Resources\\complete-prop-class.txt"))); // Assenting the file content
 ```
 
-Following this pattern you should expand all the possibilities.
-:warning: When there are file generation we need to use different file name for each test to avoid collision. Remember delete the generated files as test cleanup.
+Following this pattern you should expand all the possibilities.  
+:warning: When there are files generation we need to use different file name for each test to avoid collision. Remember delete the generated files as test cleanup.
 
 ## Integration Test
+
+It is important the unit tests, but we would like to test our Custom MSBuild task in a real build context.
+
+[System.Diagnostics.Process Class](https://docs.microsoft.com/dotnet/api/system.diagnostics.process?view=net-6.0) provides access to local and remote processes and enables you to start and stop local system processes.  
+We are going to run a real build on a unit test using test MSBuild files.
+
+We need to initialize the execution context for each test. Pay attention to ensure the path to _dotnet_ command is accurate for your environment. The complete example is [here](.\custom-task-code-generation\AppSettingStronglyTyped\AppSettingStronglyTyped.Test\AppSettingStronglyTypedIntegrationTest.cs)
+
+```csharp
+        public const string MSBUILD = "C:\\Program Files\\dotnet\\dotnet.exe";
+
+        private Process buildProcess;
+        private List<string> output;
+
+        [TestInitialize()]
+        public void Startup()
+        {
+            output = new List<string>();
+            buildProcess = new Process();
+            buildProcess.StartInfo.FileName = MSBUILD;
+            buildProcess.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            buildProcess.StartInfo.CreateNoWindow = true;
+            buildProcess.StartInfo.RedirectStandardOutput = true;
+        }
+```
+
+On cleanup, we need to finish the process
+
+```csharp
+       [TestCleanup()]
+        public void Cleanup()
+        {
+            buildProcess.Close();
+        }
+```
+
+Now we need to create each test. Each test will need its own msbuild file definition to be executed. For example [testscript-success.msbuild](.\custom-task-code-generation\AppSettingStronglyTyped\AppSettingStronglyTyped.Test\Resources\testscript-success.msbuild). For understanding the file please read [Custom Task-Code Generation](./custom-task-code-generation/).
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+	<UsingTask TaskName="AppSettingStronglyTyped.AppSettingStronglyTyped" AssemblyFile="..\AppSettingStronglyTyped.dll" />
+	<PropertyGroup>
+		<TargetFramework>netstandard2.1</TargetFramework>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<SettingClass>MySettingSuccess</SettingClass>
+		<SettingNamespace>example</SettingNamespace>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<SettingFiles Include="complete-prop.setting" />
+	</ItemGroup>
+
+	<Target Name="generateSettingClass">
+		<AppSettingStronglyTyped SettingClassName="$(SettingClass)" SettingNamespaceName="$(SettingNamespace)" SettingFiles="@(SettingFiles)">
+			<Output TaskParameter="ClassNameFile" PropertyName="SettingClassFileName" />
+		</AppSettingStronglyTyped>
+	</Target>
+</Project>
+```
+
+Our test arrange will be the indication to build this msbuild file.
+
+```csharp
+ //Arrage
+ buildProcess.StartInfo.Arguments = "build .\\Resources\\testscript-success.msbuild /t:generateSettingClass";
+```
+
+Now, we are going to execute and get the output.
+
+```csharp
+ //Act
+  ExecuteCommandAndCollectResults();
+```
+
+Where `ExecuteCommandAndCollectResults()` is defined as:
+
+```csharp
+    private void ExecuteCommandAndCollectResults()
+    {
+        buildProcess.Start();
+        while (!buildProcess.StandardOutput.EndOfStream)
+        {
+            output.Add(buildProcess.StandardOutput.ReadLine() ?? string.Empty);
+        }
+        buildProcess.WaitForExit();
+    }
+```
+
+Last but not least, we are going to asset the expected result.
+
+```csharp
+  //Assert
+  Assert.AreEqual(0, buildProcess.ExitCode); //Finished success
+  Assert.IsTrue(File.Exists(".\\Resources\\MySettingSuccess.generated.cs")); // the expected resource was generated
+  Assert.IsTrue(File.ReadLines(".\\Resources\\MySettingSuccess.generated.cs").SequenceEqual(File.ReadLines(".\\Resources\\testscript-success-class.txt"))); // asserting the file content
+```
+
+## MSBuildProjectCreator nuget package
+
+[MSBuildProjectCreator](https://github.com/jeffkl/MSBuildProjectCreator) is a class library with a fluent interface for generating MSBuild projects and NuGet package repositories. It executes from msbuild script our MSBuild Custom Task, it is more likely an integration test, but the library is defined primarily for unit tests that need MSBuild projects to do their testing.  
+Use the TryBuild methods to build your projects. TryBuild returns a BuildOutput object which captures the build output for you.  
+Note: Projects are built in a different process to avoid assembly load conflicts so projects must be saved before being built.
+
+We have a complete example [here](.\custom-task-code-generation\AppSettingStronglyTyped\AppSettingStronglyTyped.Test\AppSettingStronglyTypedIntegrationFluentTest.cs)
+
+First we need to define our project file, for example:
+
+```csharp
+        //Arrange
+        ProjectCreator creator = ProjectCreator.Create("test.proj")
+         .Sdk("Microsoft.NET.Sdk")
+         .UsingTaskAssemblyFile("AppSettingStronglyTyped.AppSettingStronglyTyped", "AppSettingStronglyTyped.dll")
+         .Property("SettingClass", "SettingSuccessFluent")
+         .Property("SettingNamespace", "SettingSuccessFluent")
+         .ItemInclude("SettingFiles", ".\\Resources\\complete-prop.setting")
+         .Target(name: "generateSettingClass", beforeTargets: "CoreCompile")
+         .Task(
+              name: "AppSettingStronglyTyped",
+              parameters: new Dictionary<string, string>
+              {
+                 { "SettingClassName", "$(SettingClass)" },
+                 { "SettingNamespaceName", "$(SettingNamespace)" },
+                 { "SettingFiles", "@(SettingFiles)" }
+              })
+         .Save(".\\PetRestApiClientSuccessFluent.msbuild");
+```
+
+The way to execute the msbuild script is:
+
+```csharp
+      //Act
+      creator.TryBuild(target: "generateSettingClass", out bool success, out BuildOutput log);
+```
+
+And we need to assert the expected results:
+
+```csharp
+    //Assert
+    Assert.IsTrue(success); //Build success
+    Assert.IsTrue(File.Exists("SettingSuccessFluent.generated.cs")); // Asserting the file was generated
+    Assert.IsTrue(File.ReadLines(".\\SettingSuccessFluent.generated.cs").SequenceEqual(File.ReadLines(".\\Resources\\success-fluent-success-class.txt"))); // Asserting file content
+```
+
+## Conclusion
+
+Testing is the only way to ensure the correctness. Unit test is really useful because you can test and debug all the scenarios easily, but have some at least some basic integration test is key ensure the task execute in a build context.  
+In this article we put on the table how to test MSBuild Custom Task.

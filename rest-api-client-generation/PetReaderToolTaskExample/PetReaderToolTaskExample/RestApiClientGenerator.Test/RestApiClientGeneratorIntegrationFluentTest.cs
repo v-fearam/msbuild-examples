@@ -15,6 +15,7 @@ namespace RestApiClientGenerator.Test
         {
             //Arrange
             ProjectCreator creator = ProjectCreator.Create("test.proj")
+             .Sdk("Microsoft.NET.Sdk")
              .UsingTaskAssemblyFile("RestApiClientGenerator.RestApiClientGenerator", "RestApiClientGenerator.dll")
              .Property("PetClientInputOpenApiSpec", "Resources\\petshop-openapi-spec.json")
              .Property("PetClientClientClassName", "PetRestApiClientSuccessFluent")
@@ -47,6 +48,7 @@ namespace RestApiClientGenerator.Test
         {
             //Arrange
             ProjectCreator creator = ProjectCreator.Create("test.proj")
+             .Sdk("Microsoft.NET.Sdk")
              .UsingTaskAssemblyFile("RestApiClientGenerator.RestApiClientGenerator", "RestApiClientGenerator.dll")
              .Property("PetClientInputOpenApiSpec", "https://petstore.swagger.io/v2/swagger.json")
              .Property("PetClientClientClassName", "PetRestApiClientFailFluent")

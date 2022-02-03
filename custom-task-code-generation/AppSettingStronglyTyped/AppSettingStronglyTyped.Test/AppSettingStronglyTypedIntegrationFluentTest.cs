@@ -15,6 +15,7 @@ namespace AppSettingStronglyTyped.Test
         {
             //Arrange
             ProjectCreator creator = ProjectCreator.Create("test.proj")
+             .Sdk("Microsoft.NET.Sdk")
              .UsingTaskAssemblyFile("AppSettingStronglyTyped.AppSettingStronglyTyped", "AppSettingStronglyTyped.dll")
              .Property("SettingClass", "SettingSuccessFluent")
              .Property("SettingNamespace", "SettingSuccessFluent")
@@ -44,6 +45,7 @@ namespace AppSettingStronglyTyped.Test
         {
             //Arrange
             ProjectCreator creator = ProjectCreator.Create("test.proj")
+             .Sdk("Microsoft.NET.Sdk")
              .UsingTaskAssemblyFile("AppSettingStronglyTyped.AppSettingStronglyTyped", "AppSettingStronglyTyped.dll")
              .Property("SettingClass", "SettingFailFluent")
              .Property("SettingNamespace", "SettingFailFluent")

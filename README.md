@@ -13,4 +13,4 @@ This repo is created to include msbuild examples
 
    [Please see the Rest-Api client Generation Readme](./rest-api-client-generation/)
 
-1. :construction: [How to test a MSBuild Custom Task](./Test.README.md)
+1. [How to test a MSBuild Custom Task](./Test.README.md)

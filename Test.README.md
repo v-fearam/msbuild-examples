@@ -2,20 +2,20 @@
 
 A really important item when we create a MSBuild Custom Task, which is going to be distributed, is to ensure the correctness.  
 The way to be confident about that is testing it.  
-It is out to scope talking about benefit of doing test and basic test tooling. Here some [basic about unit test](https://docs.microsoft.com/visualstudio/test/walkthrough-creating-and-running-unit-tests-for-managed-code?view=vs-2022).  
-We are going to use examples which already have been developed. The following projects includes unit and integration MSBuild Custom Tasks testing
+It is out of scope to talk about the benefits of doing tests and basic test tooling. Here some [basics about unit tests.](https://docs.microsoft.com/visualstudio/test/walkthrough-creating-and-running-unit-tests-for-managed-code?view=vs-2022).  
+We are going to use examples which have already been developed. The following projects includes unit and integration MSBuild Custom Tasks testing
 
 1. [Custom Task-Code Generation](./custom-task-code-generation/)
 1. [The Rest-Api client Generation - Option 2 - MSBuild Tool Task](./rest-api-client-generation/)
 
 ## Unit Test
 
-A MSBuild Custom Task is a class which inherit from MSBuild Task (directly or indirectly, because MSBuild Tool Task is a MSBuild Task). The method which generates the action is `Execute()`.  
+A MSBuild Custom Task is a class which inherits from MSBuild Task (directly or indirectly, because MSBuild Tool Task is a MSBuild Task). The method which generates the action is `Execute()`.  
 We have some input values (parameters), and output parameters which we will be able to assert.  
-In our case some input parameter are path to files, so we generated test input files on a folder called _Resources_. Our MSBuild task also generates files, so we are going to assert the generated files.
+In our case some input parameters are paths to files, so we generated test input files on a folder called _Resources_. Our MSBuild task also generates files, so we are going to assert the generated files.
 
-:white*check_mark: A build engine is needed, a class which implements [IBuildEngine](https://docs.microsoft.com/dotnet/api/microsoft.build.framework.ibuildengine?view=msbuild-17-netcore). In our example we created a mock using [Moq](https://github.com/Moq/moq4/wiki/Quickstart), but you can use other mock tool. I was interesting on collecting the errors, but you can collect another information and then assert it.  
-The Engine Mock is needed on all the tests, so it was included as \_TestInitialize* (it is going to be executed before each test, and each test will have its own build engine). [Complete example](.\custom-task-code-generation\AppSettingStronglyTyped\AppSettingStronglyTyped.Test\AppSettingStronglyTypedTest.cs)
+:white_check_mark: A build engine is needed, a class which implements [IBuildEngine](https://docs.microsoft.com/dotnet/api/microsoft.build.framework.ibuildengine?view=msbuild-17-netcore). In our example we created a mock using [Moq](https://github.com/Moq/moq4/wiki/Quickstart), but you can use other mock tools. I was interesting in collecting the errors, but you can collect other information and then assert it.  
+The Engine Mock is needed on all the tests, so it was included as _TestInitialize_ (it is going to be executed before each test, and each test will have its own build engine). [Complete example](.\custom-task-code-generation\AppSettingStronglyTyped\AppSettingStronglyTyped.Test\AppSettingStronglyTypedTest.cs)
 
 ```c#
        private Mock<IBuildEngine> buildEngine;
@@ -64,11 +64,11 @@ Last but not least, we need to assert the expected outcome from our test
 ```
 
 Following this pattern you should expand all the possibilities.  
-:warning: When there are files generation we need to use different file name for each test to avoid collision. Remember delete the generated files as test cleanup.
+:warning: When there are files generation we need to use different file name for each test to avoid collision. Remember to delete the generated files as test cleanup.
 
 ## Integration Test
 
-It is important the unit tests, but we would like to test our Custom MSBuild task in a real build context.
+Unit tests are important, but we would like to test our Custom MSBuild task in a real build context.
 
 [System.Diagnostics.Process Class](https://docs.microsoft.com/dotnet/api/system.diagnostics.process?view=net-6.0) provides access to local and remote processes and enables you to start and stop local system processes.  
 We are going to run a real build on a unit test using test MSBuild files.
@@ -129,7 +129,7 @@ Now we need to create each test. Each test will need its own msbuild file defini
 </Project>
 ```
 
-Our test arrange will be the indication to build this msbuild file.
+Our test arrangement will be the indication to build this msbuild file.
 
 ```csharp
  //Arrage
@@ -157,7 +157,7 @@ Where `ExecuteCommandAndCollectResults()` is defined as:
     }
 ```
 
-Last but not least, we are going to asset the expected result.
+Last but not least, we are going to assess the expected result.
 
 ```csharp
   //Assert

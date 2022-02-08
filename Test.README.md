@@ -214,5 +214,5 @@ And we need to assert the expected results:
 
 ## Conclusion
 
-Testing is the only way to ensure the correctness. Unit test is really useful because you can test and debug all the scenarios easily, but have some at least some basic integration test is key ensure the task execute in a build context.  
+Testing is the only way to ensure the correctness. Unit test is really useful because you can test and debug all the scenarios easily, but having some, at least some basic, integration test is key to ensure the task executes in a build context.  
 In this article we put on the table how to test MSBuild Custom Task.

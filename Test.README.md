@@ -15,7 +15,7 @@ We have some input values (parameters), and output parameters which we will be a
 In our case some input parameters are paths to files, so we generated test input files on a folder called _Resources_. Our MSBuild task also generates files, so we are going to assert the generated files.
 
 :white_check_mark: A build engine is needed, a class which implements [IBuildEngine](https://docs.microsoft.com/dotnet/api/microsoft.build.framework.ibuildengine?view=msbuild-17-netcore). In our example we created a mock using [Moq](https://github.com/Moq/moq4/wiki/Quickstart), but you can use other mock tools. I was interesting in collecting the errors, but you can collect other information and then assert it.  
-The Engine Mock is needed on all the tests, so it was included as _TestInitialize_ (it is going to be executed before each test, and each test will have its own build engine). [Complete example](.\custom-task-code-generation\AppSettingStronglyTyped\AppSettingStronglyTyped.Test\AppSettingStronglyTypedTest.cs)
+The Engine Mock is needed on all the tests, so it was included as _TestInitialize_ (it is going to be executed before each test, and each test will have its own build engine). [Complete example](./custom-task-code-generation/AppSettingStronglyTyped/AppSettingStronglyTyped.Test/AppSettingStronglyTypedTest.cs)
 
 ```c#
        private Mock<IBuildEngine> buildEngine;
@@ -73,7 +73,7 @@ Unit tests are important, but we would like to test our Custom MSBuild task in a
 [System.Diagnostics.Process Class](https://docs.microsoft.com/dotnet/api/system.diagnostics.process?view=net-6.0) provides access to local and remote processes and enables you to start and stop local system processes.  
 We are going to run a real build on a unit test using test MSBuild files.
 
-We need to initialize the execution context for each test. Pay attention to ensure the path to _dotnet_ command is accurate for your environment. The complete example is [here](.\custom-task-code-generation\AppSettingStronglyTyped\AppSettingStronglyTyped.Test\AppSettingStronglyTypedIntegrationTest.cs)
+We need to initialize the execution context for each test. Pay attention to ensure the path to _dotnet_ command is accurate for your environment. The complete example is [here](./custom-task-code-generation/AppSettingStronglyTyped/AppSettingStronglyTyped.Test/AppSettingStronglyTypedIntegrationTest.cs)
 
 ```csharp
         public const string MSBUILD = "C:\\Program Files\\dotnet\\dotnet.exe";
@@ -103,7 +103,7 @@ On cleanup, we need to finish the process
         }
 ```
 
-Now we need to create each test. Each test will need its own msbuild file definition to be executed. For example [testscript-success.msbuild](/custom-task-code-generation/AppSettingStronglyTyped/AppSettingStronglyTyped.Test/Resources/testscript-success.msbuild). For understanding the file please read [Custom Task-Code Generation](./custom-task-code-generation/).
+Now we need to create each test. Each test will need its own msbuild file definition to be executed. For example [testscript-success.msbuild](./custom-task-code-generation/AppSettingStronglyTyped/AppSettingStronglyTyped.Test/Resources/testscript-success.msbuild). For understanding the file please read [Custom Task-Code Generation](./custom-task-code-generation/).
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
@@ -172,7 +172,7 @@ Last but not least, we are going to assess the expected result.
 Use the TryBuild methods to build your projects. TryBuild returns a BuildOutput object which captures the build output for you.  
 Note: Projects are built in a different process to avoid assembly load conflicts so projects must be saved before being built.
 
-We have a complete example [here](.\custom-task-code-generation\AppSettingStronglyTyped\AppSettingStronglyTyped.Test\AppSettingStronglyTypedIntegrationFluentTest.cs)
+We have a complete example [here](./custom-task-code-generation/AppSettingStronglyTyped/AppSettingStronglyTyped.Test/AppSettingStronglyTypedIntegrationFluentTest.cs)
 
 First we need to define our project file, for example:
 

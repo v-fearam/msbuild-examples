@@ -103,7 +103,7 @@ On cleanup, we need to finish the process
         }
 ```
 
-Now we need to create each test. Each test will need its own msbuild file definition to be executed. For example [testscript-success.msbuild](.\custom-task-code-generation\AppSettingStronglyTyped\AppSettingStronglyTyped.Test\Resources\testscript-success.msbuild). For understanding the file please read [Custom Task-Code Generation](./custom-task-code-generation/).
+Now we need to create each test. Each test will need its own msbuild file definition to be executed. For example [testscript-success.msbuild](/custom-task-code-generation/AppSettingStronglyTyped/AppSettingStronglyTyped.Test/Resources/testscript-success.msbuild). For understanding the file please read [Custom Task-Code Generation](./custom-task-code-generation/).
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">

@@ -78,7 +78,7 @@ We need to override the Execute method. The execute method returns true if the t
 
 Then, the details are really not important for our purpose. You can copy from the source code and improve if you like.
 
-:shipit:Food for thought. We are generating c# code during build process as example.The task is like any other c# class, you could do whatever you want. For example sending an email, generating change log, reading github repository. This is the power of MSBuild custom tasks.
+:shipit:Food for thought. We are generating c# code during build process as example.The task is like any other c# class, you could do whatever you want. For example sending an email, generating change log, reading github repository. This is the power of MSBuild Custom tasks.
 
 ### Step 3, Change the AppSettingStronglyTyped.csproj
 
@@ -158,7 +158,7 @@ Then, the dependencies of your MSBuild task must be packaged inside the package,
 
 ### Step 4, Include MSBuild props and targets in a package
 
-We recommend first reading the basics about[props and target](https://docs.microsoft.com/visualstudio/msbuild/customize-your-build) and then how to [include props and targets on a nuget](https://docs.microsoft.com/nuget/create-packages/creating-a-package#include-msbuild-props-and-targets-in-a-package).
+We recommend first reading the basics about [props and target](https://docs.microsoft.com/visualstudio/msbuild/customize-your-build) and then how to [include props and targets on a nuget](https://docs.microsoft.com/nuget/create-packages/creating-a-package#include-msbuild-props-and-targets-in-a-package).
 
 In some cases, you might want to add custom build targets or properties in projects that consume your package, such as running a custom tool or process during build. You do this by placing files in the form <package_id>.targets or <package_id>.props within the \build folder of the project.  
 Files in the root \build folder are considered suitable for all target frameworks.  
@@ -246,7 +246,7 @@ The first step is the creation of an [InputGroup](https://docs.microsoft.com/vis
 Then we define two [MSBuild targets](https://docs.microsoft.com/visualstudio/msbuild/msbuild-targets?view=vs-2022). We [extends the MSBuild process](https://docs.microsoft.com/visualstudio/msbuild/how-to-extend-the-visual-studio-build-process?view=vs-2022) overriding predefined targets:
 
 1. BeforeCompile: The goal is to call our custom task to generate the class and include the class to be compiled. Tasks that are inserted before core compilation is done. Input and Output fields are related to [incremental build](https://docs.microsoft.com/visualstudio/msbuild/incremental-builds?view=vs-2022). If all output items are up-to-date, MSBuild skips the target. This incremental build of the target can significantly improve the build speed. An item is considered up-to-date if its output file is the same age or newer than its input file or files.
-1. AfterClean: The goal is to delete the generated class file after a general clean happens.Tasks that are inserted after the core clean functionality is invoked. It forces the generation on MSBuild rebuild target execution.
+1. AfterClean: The goal is to delete the generated class file after a general clean happens. Tasks that are inserted after the core clean functionality is invoked. It forces the generation on MSBuild rebuild target execution.
 
 ### Step 5, Generates the nuget package
 

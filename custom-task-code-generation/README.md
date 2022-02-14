@@ -300,6 +300,16 @@ Go to Program.cs and change the hardcoded 'Hello Word!!' to our constant
 
 We can execute the program, it will greet our generated class.
 
+_Note:_ It is a good practice include **PrivateAssets="All"** on the PackageReference. The project which use the MSBuild Custom Task as nuget. It should look like
+
+```xml
+<ItemGroup>
+		<PackageReference Include="AppSettingStronglyTyped" Version="1.0.0" PrivateAssets="All"/>
+</ItemGroup>
+```
+
+It means that assets will be consumed but won't flow to the parent project. [More information](https://docs.microsoft.com/nuget/consume-packages/package-references-in-project-files#controlling-dependency-assets)
+
 ### Step 7 (Optional), Check what is going on during build process
 
 It is possible to compile using a command line command. We need to go to the MSBuildConsoleExample\MSBuildConsoleExample folder.

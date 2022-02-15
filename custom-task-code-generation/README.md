@@ -64,15 +64,17 @@ We need to override the Execute method. The execute method returns true if the t
 ```c#
         public override bool Execute()
         {
-            //Read the input files and return a IDictionary<string, object> with the properties to be created.
+            //Read the input files and return a IDictionary<string, object> with the properties to be created. 
             //Any format error it will return not succeed and Log.LogError properly
             var (success, settings) = ReadProjectSettingFiles();
             if (!success)
             {
-                return success;
+                return !Log.HasLoggedErrors;
             }
             //Create the class based on the Dictionary
-            return CreateSettingClass(settings);
+            success = CreateSettingClass(settings);
+
+            return !Log.HasLoggedErrors;
         }
 ```
 

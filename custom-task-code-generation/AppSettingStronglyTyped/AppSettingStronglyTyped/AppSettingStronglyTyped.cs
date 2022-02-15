@@ -129,6 +129,7 @@ namespace AppSettingStronglyTyped
             }
             catch (Exception ex)
             {
+                //This logging helper method is designed to capture and display information from arbitrary exceptions in a standard way.
                 Log.LogErrorFromException(ex, showStackTrace: true);
                 return false;
             }

@@ -179,6 +179,8 @@ The complete code version is in this PetReaderToolTaskExample folder, you can do
     }
   ```
 
+_Note:_This simple validation could be done in other way on the MSBuild file, but it is recommended do it in C# code and encapsulate the command and the logic.
+
 - Build the project, everything should compile.
 - Create a console app to use our new MSBuild Task
 

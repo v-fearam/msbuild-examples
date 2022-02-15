@@ -127,9 +127,9 @@ namespace AppSettingStronglyTyped
                 File.WriteAllText(ClassNameFile, settingsClass.ToString());
 
             }
-            catch (Exception Ex)
+            catch (Exception ex)
             {
-                Log.LogError(Ex.ToString());
+                Log.LogErrorFromException(ex, showStackTrace: true);
                 return false;
             }
             return true;

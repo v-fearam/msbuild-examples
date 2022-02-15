@@ -32,10 +32,12 @@ namespace AppSettingStronglyTyped
             var (success, settings) = ReadProjectSettingFiles();
             if (!success)
             {
-                return success;
+                return !Log.HasLoggedErrors;
             }
             //Create the class based on the Dictionary
-            return CreateSettingClass(settings);
+            success = CreateSettingClass(settings);
+
+            return !Log.HasLoggedErrors;
         }
 
         private (bool, IDictionary<string, object>) ReadProjectSettingFiles()

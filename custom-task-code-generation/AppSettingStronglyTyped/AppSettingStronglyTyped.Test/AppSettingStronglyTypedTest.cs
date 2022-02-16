@@ -60,7 +60,13 @@ namespace AppSettingStronglyTyped.Test
             Assert.IsFalse(success);
             Assert.AreEqual(errors.Count, 1);
             Assert.AreEqual(null, appSettingStronglyTyped.ClassNameFile);
-            Assert.AreEqual("Incorrect line format. Valid format prop:type:defaultvalue", errors.First().Message);
+
+            Assert.AreEqual(1, errors.Count);
+
+            var error = errors.First();
+
+            Assert.AreEqual("Incorrect line format. Valid format prop:type:defaultvalue", error.Message);
+            Assert.AreEqual(1, error.LineNumber);
         }
 
         [TestMethod]

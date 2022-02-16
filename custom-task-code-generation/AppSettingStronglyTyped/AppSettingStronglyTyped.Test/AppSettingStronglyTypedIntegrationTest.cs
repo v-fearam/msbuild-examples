@@ -37,7 +37,7 @@ namespace AppSettingStronglyTyped.Test
         public void ValidSettingTextFile_SettingClassGenerated()
         {
             //Arrage
-            buildProcess.StartInfo.Arguments = "build .\\Resources\\testscript-success.msbuild /t:generateSettingClass";
+            buildProcess.StartInfo.Arguments = "build -nodeReuse:false .\\Resources\\testscript-success.msbuild /t:generateSettingClass";
 
             //Act
             ExecuteCommandAndCollectResults();
@@ -55,7 +55,7 @@ namespace AppSettingStronglyTyped.Test
         public void NotValidSettingTextFile_SettingClassNotGenerated()
         {
             //Arrage
-            buildProcess.StartInfo.Arguments = "build .\\Resources\\testscript-fail.msbuild /t:generateSettingClass";
+            buildProcess.StartInfo.Arguments = "build -nodeReuse:false .\\Resources\\testscript-fail.msbuild /t:generateSettingClass";
 
             //Act
             ExecuteCommandAndCollectResults();

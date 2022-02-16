@@ -1,8 +1,5 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project>
 	<UsingTask TaskName="AppSettingStronglyTyped.AppSettingStronglyTyped" AssemblyFile="..\AppSettingStronglyTyped.dll" />
-	<PropertyGroup>
-		<TargetFramework>netstandard2.1</TargetFramework>
-	</PropertyGroup>
 
 	<PropertyGroup>
 		<SettingClass>MySettingFail</SettingClass>
@@ -10,7 +7,7 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<SettingFiles Include="notvalidtype-prop.setting" />
+		<SettingFiles Include="error-prop.setting" />
 	</ItemGroup>
 
 	<Target Name="generateSettingClass">

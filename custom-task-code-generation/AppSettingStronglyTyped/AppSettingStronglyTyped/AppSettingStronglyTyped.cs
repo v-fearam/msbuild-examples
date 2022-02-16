@@ -45,13 +45,25 @@ namespace AppSettingStronglyTyped
             var values = new Dictionary<string, object>();
             foreach (var item in SettingFiles)
             {
-                var identity = item.GetMetadata("Identity");
-                foreach (string line in File.ReadLines(identity))
+                int lineNumber = 0;
+
+                var settingFile = item.GetMetadata("FullPath");
+                foreach (string line in File.ReadLines(settingFile))
                 {
+                    lineNumber++;
+
                     var lineParse = line.Split(':');
                     if (lineParse.Length != 3)
                     {
-                        Log.LogError("Incorrect line format. Valid format prop:type:defaultvalue");
+                        Log.LogError(subcategory: null,
+                                     errorCode: "APPS0001",
+                                     helpKeyword: null,
+                                     file: settingFile,
+                                     lineNumber: lineNumber,
+                                     columnNumber: 0,
+                                     endLineNumber: 0,
+                                     endColumnNumber: 0,
+                                     message: "Incorrect line format. Valid format prop:type:defaultvalue");
                         return (false, null);
                     }
                     var value = GetValue(lineParse[1], lineParse[2]);

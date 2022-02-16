@@ -49,7 +49,7 @@ namespace AppSettingStronglyTyped.Test
         {
             //arrange
             var item = new Mock<ITaskItem>();
-            item.Setup(x => x.GetMetadata("Identity")).Returns(".\\Resources\\error-prop.setting");
+            item.Setup(x => x.GetMetadata("FullPath")).Returns(".\\Resources\\error-prop.setting");
             var appSettingStronglyTyped = new AppSettingStronglyTyped { SettingClassName = "ErrorPropSetting", SettingNamespaceName = "MyNamespace", SettingFiles = new[] { item.Object } };
             appSettingStronglyTyped.BuildEngine = buildEngine.Object;
 
@@ -68,7 +68,7 @@ namespace AppSettingStronglyTyped.Test
         {
             //arrange
             var item = new Mock<ITaskItem>();
-            item.Setup(x => x.GetMetadata("Identity")).Returns(".\\Resources\\notvalidtype-prop.setting");
+            item.Setup(x => x.GetMetadata("FullPath")).Returns(".\\Resources\\notvalidtype-prop.setting");
             var appSettingStronglyTyped = new AppSettingStronglyTyped { SettingClassName = "ErrorPropSetting", SettingNamespaceName = "MyNamespace", SettingFiles = new[] { item.Object } };
             appSettingStronglyTyped.BuildEngine = buildEngine.Object;
 
@@ -87,7 +87,7 @@ namespace AppSettingStronglyTyped.Test
         {
             //arrange
             var item = new Mock<ITaskItem>();
-            item.Setup(x => x.GetMetadata("Identity")).Returns(".\\Resources\\notvalidvalue-prop.setting");
+            item.Setup(x => x.GetMetadata("FullPath")).Returns(".\\Resources\\notvalidvalue-prop.setting");
             var appSettingStronglyTyped = new AppSettingStronglyTyped { SettingClassName = "ErrorPropSetting", SettingNamespaceName = "MyNamespace", SettingFiles = new[] { item.Object } };
             appSettingStronglyTyped.BuildEngine = buildEngine.Object;
 
@@ -111,7 +111,7 @@ namespace AppSettingStronglyTyped.Test
         {
             //arrange
             var item = new Mock<ITaskItem>();
-            item.Setup(x => x.GetMetadata("Identity")).Returns($".\\Resources\\{value}-prop.setting");
+            item.Setup(x => x.GetMetadata("FullPath")).Returns($".\\Resources\\{value}-prop.setting");
             var appSettingStronglyTyped = new AppSettingStronglyTyped { SettingClassName = $"My{value}PropSetting", SettingNamespaceName = "MyNamespace", SettingFiles = new[] { item.Object } };
             appSettingStronglyTyped.BuildEngine = buildEngine.Object;
 
@@ -134,7 +134,7 @@ namespace AppSettingStronglyTyped.Test
         {
             //arrange
             var item = new Mock<ITaskItem>();
-            item.Setup(x => x.GetMetadata("Identity")).Returns($".\\Resources\\complete-prop.setting");
+            item.Setup(x => x.GetMetadata("FullPath")).Returns($".\\Resources\\complete-prop.setting");
             var appSettingStronglyTyped = new AppSettingStronglyTyped { SettingClassName = $"MyCompletePropSetting", SettingNamespaceName = "MyNamespace", SettingFiles = new[] { item.Object } };
             appSettingStronglyTyped.BuildEngine = buildEngine.Object;
 

@@ -45,8 +45,8 @@ namespace AppSettingStronglyTyped
             var values = new Dictionary<string, object>();
             foreach (var item in SettingFiles)
             {
-                var identity = item.GetMetadata("Identity");
-                foreach (string line in File.ReadLines(identity))
+                var settingFile = item.GetMetadata("FullPath");
+                foreach (string line in File.ReadLines(settingFile))
                 {
                     var lineParse = line.Split(':');
                     if (lineParse.Length != 3)

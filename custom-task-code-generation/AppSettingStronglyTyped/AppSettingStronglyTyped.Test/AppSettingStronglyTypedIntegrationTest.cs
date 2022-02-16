@@ -6,6 +6,18 @@ using System.Linq;
 
 namespace AppSettingStronglyTyped.Test
 {
+    /**
+     * MSBuild starts worker nodes when building multiple projects. These are independent
+     * processes that can be long-lived (by default, they have a 15 minute idle timeout).
+     * Reusing these processes allows subsequent builds to benefit from reduced startup
+     * time and increased caching in internal mechanisms, BUT it also means that there
+     * will be a process holding a lock on any used task assemblies for a long time.
+     * The command-line argument -nodeReuse:false tells MSBuild not to do that: any
+     * additional processes it creates will exit when the build does.
+     * 
+     * If you've ever noticed builds failing because of a failure to copy to the output
+     * because a file was in use after running tests, it's because of this.
+     **/
     [TestClass]
     public class AppSettingStronglyTypedIntegrationTest
     {
@@ -63,7 +75,7 @@ namespace AppSettingStronglyTyped.Test
             //Assert
             Assert.AreEqual(1, buildProcess.ExitCode);
             Assert.IsFalse(File.Exists(".\\Resources\\MySettingFail.generated.cs"));
-            Assert.IsTrue(output.Any(line => line.Contains("Type not supported -> car")));
+            Assert.IsTrue(output.Any(line => line.Contains("Incorrect line format. Valid format prop:type:defaultvalue")));
         }
 
         private void ExecuteCommandAndCollectResults()

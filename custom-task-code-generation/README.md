@@ -8,13 +8,13 @@ The basic idea of the current example is defined as:
 Input text => Generation => Output C# (Some code generation)
 ```
 
-We are going to create a msbuild custom task named AppSettingStronglyTyped. The task is going to read a set of text files, and each file with lines with the following format:
+We are going to create a MSBuild custom task named AppSettingStronglyTyped. The task is going to read a set of text files, and each file with lines with the following format:
 
 ```
 propertyName:type:defaultValue
 ```
 
-Then our code will generate a c# class with all the constants. :innocent: This is not useful at all, it is simple, the idea is help us to learn the mechanism.  
+Then our code will generate a C# class with all the constants. :innocent: This is not useful at all, it is simple, the idea is help us to learn the mechanism.  
 A problem should stop the build and give us enough information.
 
 ## Step 1, create the AppSettingStronglyTyped project
@@ -30,7 +30,7 @@ If you want to share code between .NET Framework and any other .NET implementati
 
 ## Step 2, create the AppSettingStronglyTyped MSBuild Custom Task
 
-We need to create our MSBuild CustomTask. Information about how to [write msbuild custom task](https://docs.microsoft.com/visualstudio/msbuild/task-writing), it is good information to understand the following steps.
+We need to create our MSBuild CustomTask. Information about how to [write MSBuild custom task](https://docs.microsoft.com/visualstudio/msbuild/task-writing), it is good information to understand the following steps.
 
 We need to include _Microsoft.Build.Utilities.Core_ nuget package, and then create a AppSettingStronglyTyped derived from Microsoft.Build.Utilities.Task.
 
@@ -80,7 +80,7 @@ We need to override the Execute method. The execute method returns true if the t
 
 Then, the details are really not important for our purpose. You can copy from the source code and improve if you like.
 
-:shipit:Food for thought. We are generating c# code during build process as example.The task is like any other c# class, you could do whatever you want. For example sending an email, generating change log, reading github repository. This is the power of MSBuild Custom tasks.
+:shipit:Food for thought. We are generating C# code during build process as example.The task is like any other c# class, you could do whatever you want. For example, sending an email, generating change log, reading github repository. This is the power of MSBuild custom tasks.
 
 ### Step 3, Change the AppSettingStronglyTyped.csproj
 
@@ -100,7 +100,7 @@ We need to make some changes on the project file. Now we have something simple l
 </Project>
 ```
 
-We are going to generate a nuget package, so first we need to add some basic information
+We are going to generate a NuGet package, so first we need to add some basic information
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
@@ -243,7 +243,7 @@ The _AppSettingStronglyTyped.props_ will be automatically included when the pack
 </Project>
 ```
 
-The first step is the creation of an [InputGroup](https://docs.microsoft.com/visualstudio/msbuild/msbuild-items?view=vs-2022) which represents the text files (there could be more than one) to read and it will be some of our task parameters. There are default for the location and the extension where we look for, but you can override the values defining the properties on the client msbuild project file.
+The first step is the creation of an [InputGroup](https://docs.microsoft.com/visualstudio/msbuild/msbuild-items?view=vs-2022) which represents the text files (there could be more than one) to read and it will be some of our task parameters. There are default for the location and the extension where we look for, but you can override the values defining the properties on the client MSBuild project file.
 
 Then we define two [MSBuild targets](https://docs.microsoft.com/visualstudio/msbuild/msbuild-targets?view=vs-2022). We [extends the MSBuild process](https://docs.microsoft.com/visualstudio/msbuild/how-to-extend-the-visual-studio-build-process?view=vs-2022) overriding predefined targets:
 
@@ -252,7 +252,7 @@ Then we define two [MSBuild targets](https://docs.microsoft.com/visualstudio/msb
 
 ### Step 5, Generates the nuget package
 
-We can use Visual Studio (Right click on the project and select 'pack').
+We can use Visual Studio (Right-click on the project and select 'pack').
 We can also do it by command line. Move to the folder where the AppSettingStronglyTyped.csproj is present, and execute:
 
 ```dotnetcli
@@ -266,10 +266,10 @@ Congrats!! You must have `\AppSettingStronglyTyped\AppSettingStronglyTyped\AppSe
 
 ### Step 6, Generate console app and test our new MSBuild task
 
-Now, we are going to create a standard .Net Core console app for testing the nuget package generated.  
+Now, we are going to create a standard .Net Core console app for testing the NuGet package generated.  
 :warning: We need to avoid generating a MSBuild custom task in the same MSBuild process which is going to consume it. The new project should be in a completely different Visual Studio Solution or the new project uses a dll pre-generated and re-located from the standard output.  
 We could call MSBuildConsoleExample the new project on a new Visual Studio Solution.
-We must import the AppSettingStronglyTyped nuget. We need to define a new package source and define a local folder as package source, [please follow the instructions](https://docs.microsoft.com/nuget/consume-packages/install-use-packages-visual-studio#package-sources). Then copy our nuget on that folder and install it on our console app.
+We must import the AppSettingStronglyTyped nuget. We need to define a new package source and define a local folder as package source, [please follow the instructions](https://docs.microsoft.com/nuget/consume-packages/install-use-packages-visual-studio#package-sources). Then copy our NuGet package on that folder and install it on our console app.
 
 Then, we should rebuild to be sure everything is ok.
 
@@ -367,4 +367,4 @@ For example (Note that the nuget is not referenced):
 </Project>
 ```
 
-_Note:_ You can notice we are using another way to order the targets [(BeforeTarget and AfterTarget)](https://docs.microsoft.com/visualstudio/msbuild/target-build-order?view=vs-2022#beforetargets-and-aftertargets). The note on [override predefined targets](https://docs.microsoft.com/visualstudio/msbuild/how-to-extend-the-visual-studio-build-process?view=vs-2022#override-predefined-targets) section on the msbuild extension article on the says: 'SDK-style projects have an implicit import of targets after the last line of the project file. This means that you cannot override default targets unless you specify your imports manually'.
+_Note:_ You can notice we are using another way to order the targets [(BeforeTarget and AfterTarget)](https://docs.microsoft.com/visualstudio/msbuild/target-build-order?view=vs-2022#beforetargets-and-aftertargets). The note on [override predefined targets](https://docs.microsoft.com/visualstudio/msbuild/how-to-extend-the-visual-studio-build-process?view=vs-2022#override-predefined-targets) section on the MSBuild extension article on the says: 'SDK-style projects have an implicit import of targets after the last line of the project file. This means that you cannot override default targets unless you specify your imports manually'.

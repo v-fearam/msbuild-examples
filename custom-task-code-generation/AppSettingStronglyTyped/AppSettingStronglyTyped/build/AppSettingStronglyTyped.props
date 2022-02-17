@@ -18,7 +18,7 @@
 	<PropertyGroup>
 		<RootFolder Condition="'$(RootFolder)' == ''">$(MSBuildProjectDirectory)</RootFolder>
 		<SettingClass Condition="'$(SettingClass)' == ''">MySetting</SettingClass>
-		<SettingNamespace Condition="'$(SettingNamespace)' == ''">example</SettingNamespace>
+		<SettingNamespace Condition="'$(SettingNamespace)' == ''">Example</SettingNamespace>
 		<SettingExtensionFile Condition="'$(SettingExtensionFile)' == ''">mysettings</SettingExtensionFile>
 	</PropertyGroup>
 </Project>

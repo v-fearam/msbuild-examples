@@ -32,7 +32,7 @@ If you want to share code between .NET Framework and any other .NET implementati
 
 We need to create our MSBuild CustomTask. Information about how to [write MSBuild custom task](https://docs.microsoft.com/visualstudio/msbuild/task-writing), it is good information to understand the following steps.
 
-We need to include _Microsoft.Build.Utilities.Core_ nuget package, and then create a AppSettingStronglyTyped derived from Microsoft.Build.Utilities.Task.
+We need to include _Microsoft.Build.Utilities.Core_ NuGet package, and then create a AppSettingStronglyTyped derived from Microsoft.Build.Utilities.Task.
 
 We are going use three parameters:
 
@@ -160,7 +160,7 @@ Then, the dependencies of your MSBuild task must be packaged inside the package,
 
 ### Step 4, Include MSBuild props and targets in a package
 
-We recommend first reading the basics about [props and target](https://docs.microsoft.com/visualstudio/msbuild/customize-your-build) and then how to [include props and targets on a nuget](https://docs.microsoft.com/nuget/create-packages/creating-a-package#include-msbuild-props-and-targets-in-a-package).
+We recommend first reading the basics about [props and target](https://docs.microsoft.com/visualstudio/msbuild/customize-your-build) and then how to [include props and targets on a NuGet](https://docs.microsoft.com/nuget/create-packages/creating-a-package#include-msbuild-props-and-targets-in-a-package).
 
 In some cases, you might want to add custom build targets or properties in projects that consume your package, such as running a custom tool or process during build. You do this by placing files in the form <package_id>.targets or <package_id>.props within the \build folder of the project.  
 Files in the root \build folder are considered suitable for all target frameworks.  
@@ -188,10 +188,10 @@ _AppSettingStronglyTyped.props_ includes the task and define some prop with defa
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<!--defining properties interesting for my task-->
 	<PropertyGroup>
-		<!--default directory where the .dll was publich inside a nuget package-->
+		<!--default directory where the .dll was publich inside a NuGet package-->
 		<taskForldername>lib</taskForldername>
 		<taskFramework>netstandard2.0</taskFramework>
-		<!--The folder where the custom task will be present. It points to inside the nuget package. -->
+		<!--The folder where the custom task will be present. It points to inside the NuGet package. -->
 		<CustomTasksFolder>$(MSBuildThisFileDirectory)..\$(taskForldername)\$(taskFramework)</CustomTasksFolder>
 		<!--Reference to the assembly which contains the MSBuild Task-->
 		<CustomTasksAssembly>$(CustomTasksFolder)\$(MSBuildThisFileName).dll</CustomTasksAssembly>
@@ -250,7 +250,7 @@ Then we define two [MSBuild targets](https://docs.microsoft.com/visualstudio/msb
 1. BeforeCompile: The goal is to call our custom task to generate the class and include the class to be compiled. Tasks that are inserted before core compilation is done. Input and Output fields are related to [incremental build](https://docs.microsoft.com/visualstudio/msbuild/incremental-builds?view=vs-2022). If all output items are up-to-date, MSBuild skips the target. This incremental build of the target can significantly improve the build speed. An item is considered up-to-date if its output file is the same age or newer than its input file or files.
 1. AfterClean: The goal is to delete the generated class file after a general clean happens. Tasks that are inserted after the core clean functionality is invoked. It forces the generation on MSBuild rebuild target execution.
 
-### Step 5, Generates the nuget package
+### Step 5, Generates the NuGet package
 
 We can use Visual Studio (Right-click on the project and select 'pack').
 We can also do it by command line. Move to the folder where the AppSettingStronglyTyped.csproj is present, and execute:
@@ -269,7 +269,7 @@ Congrats!! You must have `\AppSettingStronglyTyped\AppSettingStronglyTyped\AppSe
 Now, we are going to create a standard .Net Core console app for testing the NuGet package generated.  
 :warning: We need to avoid generating a MSBuild custom task in the same MSBuild process which is going to consume it. The new project should be in a completely different Visual Studio Solution or the new project uses a dll pre-generated and re-located from the standard output.  
 We could call MSBuildConsoleExample the new project on a new Visual Studio Solution.
-We must import the AppSettingStronglyTyped nuget. We need to define a new package source and define a local folder as package source, [please follow the instructions](https://docs.microsoft.com/nuget/consume-packages/install-use-packages-visual-studio#package-sources). Then copy our NuGet package on that folder and install it on our console app.
+We must import the AppSettingStronglyTyped NuGet. We need to define a new package source and define a local folder as package source, [please follow the instructions](https://docs.microsoft.com/nuget/consume-packages/install-use-packages-visual-studio#package-sources). Then copy our NuGet package on that folder and install it on our console app.
 
 Then, we should rebuild to be sure everything is ok.
 
@@ -302,7 +302,7 @@ Go to Program.cs and change the hardcoded 'Hello Word!!' to our constant
 
 We can execute the program, it will greet our generated class.
 
-_Note:_ It is a good practice include **PrivateAssets="All"** on the PackageReference. The project which use the MSBuild Custom Task as nuget. It should look like
+_Note:_ It is a good practice include **PrivateAssets="All"** on the PackageReference. The project which use the MSBuild Custom Task as NuGet. It should look like
 
 ```xml
 <ItemGroup>
@@ -330,9 +330,9 @@ The option `/t:rebuild` means run the rebuild target. It will force regeneration
 
 ### Development
 
-During development and debugging it could be hard to ship your custom task as a nuget package.  
-It could be easier to include all the information on .props and target directly on your MSBuildConsoleExample.csproj and then move to the nuget shipping format.
-For example (Note that the nuget is not referenced):
+During development and debugging it could be hard to ship your custom task as a NuGet package.  
+It could be easier to include all the information on .props and target directly on your MSBuildConsoleExample.csproj and then move to the NuGet shipping format.
+For example (Note that the NuGet package is not referenced):
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">

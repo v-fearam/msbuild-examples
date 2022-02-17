@@ -129,7 +129,7 @@ Now we need to create each test. Each test will need its own msbuild file defini
 </Project>
 ```
 
-Our test arrangement will be the indication to build this msbuild file.
+Our test arrangement will be the indication to build this MSBuild file.
 
 ```csharp
  //Arrage
@@ -166,7 +166,7 @@ Last but not least, we are going to assess the expected result.
   Assert.IsTrue(File.ReadLines(".\\Resources\\MySettingSuccess.generated.cs").SequenceEqual(File.ReadLines(".\\Resources\\testscript-success-class.txt"))); // asserting the file content
 ```
 
-## MSBuildProjectCreator nuget package
+## MSBuildProjectCreator NuGet package
 
 [MSBuildProjectCreator](https://github.com/jeffkl/MSBuildProjectCreator) is a class library with a fluent interface for generating MSBuild projects and NuGet package repositories. It executes from msbuild script our MSBuild Custom Task, it is more likely an integration test, but the library is defined primarily for unit tests that need MSBuild projects to do their testing.  
 Use the TryBuild methods to build your projects. TryBuild returns a BuildOutput object which captures the build output for you.  
@@ -196,7 +196,7 @@ First we need to define our project file, for example:
          .Save(".\\PetRestApiClientSuccessFluent.msbuild");
 ```
 
-The way to execute the msbuild script is:
+The way to execute the MSBuild script is:
 
 ```csharp
       //Act

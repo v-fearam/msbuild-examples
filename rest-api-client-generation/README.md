@@ -18,7 +18,7 @@ The complete code version is in this PetReaderExecTaskExample folder, you can do
 - We are going to create a new console application on Visual Studio named PetReaderExecTaskExample. We use net6.0.
 - Create another project in the same solution: PetShopRestClient (This is going to contain the generated client as a Library). We use netstandard 2.1. The generated client doesn't compile on netstandard 2.0.
 - Go to the PetReaderExecTaskExample project, and add a project dependence to PetShopRestClient project.
-- On PetShopRestClient, include the following nuget packages
+- On PetShopRestClient, include the following NuGet packages
   - Nswag.MSBuild, it will allow us access to the code generator from MSBuild
   - Newtonsoft.Json, it will be needed to compile the generated client
   - System.ComponentModel.Annotations, it will be needed to compile the generated client
@@ -97,7 +97,7 @@ The complete code version is in this PetReaderToolTaskExample folder, you can do
 
 - We are going to create a new Visual Studio Project for the Custom Task. We will call it "RestApiClientGenerator" and it must be library c# netstandard2.0. The solution name will be "PetReaderToolTaskExample"
 - Delete Class1.cs automatically generated
-- Add _Microsoft.Build.Utilities.Core_ nuget package
+- Add _Microsoft.Build.Utilities.Core_ NuGet package
 - Create a class called "RestApiClientGenerator"
 - Inherit MSBuild Tool Task and implement abstract method, we will get something like
 
@@ -188,7 +188,7 @@ _Note:_This simple validation could be done in other way on the MSBuild file, bu
   - Create a Library project to generate the code, called "PetRestApiClient". NetStandard2.1
   - On "PetReaderToolTaskConsoleApp" create dependency to "PetRestApiClient"
   - On PetRestApiClient project create a folder "PetRestApiClient", this folder will contain the generated code and delete Class1.cs automatically generated.
-  - On PetRestApiClient add the following nuget packages:
+  - On PetRestApiClient add the following NuGet packages:
     - Newtonsoft.Json, it will be needed to compile the generated client
     - System.ComponentModel.Annotations, it will be needed to compile the generated client
 - On PetRestApiClient, create a text file named petshop-openapi-spec.json (on root). We are going to add the OpenApi spec, please copy the content from [here](https://petstore.swagger.io/v2/swagger.json) inside the file. We like repetitive build and depending only from the input, consuming directly the api could transform a build which works today to a build which fails tomorrow from the same source. In this example, we are going to raise a build error if you choose a URL as OpenApi spec input.
@@ -263,7 +263,7 @@ _Note:_This simple validation could be done in other way on the MSBuild file, bu
 
 Select "PetReaderToolTaskConsoleApp" and rebuild only that project. You will get the error "URL is not allowed"
 
-_Note:_ If you like to publish your custom task as nuget package, please read the [Custom task code generation](../custom-task-code-generation/) example.
+_Note:_ If you like to publish your custom task as NuGet package, please read the [Custom task code generation](../custom-task-code-generation/) example.
 
 #### Downloading code
 

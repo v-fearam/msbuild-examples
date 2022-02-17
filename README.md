@@ -1,8 +1,8 @@
 # MSBuild examples
 
-This repo is created to include msbuild examples
+This repo is created to include MSBuild examples
 
-1. The first example is the creation of a _MSBuild Custom Task_ for code generation. The idea is to consume a txt file and generate code from it during the build process. It is simple in order to show the mechanism, then you will be able to create a more complex piece of code. Part of this effort includes how to ship and consume the MSBuild Custom Task as a _nuget package_.
+1. The first example is the creation of a _MSBuild Custom Task_ for code generation. The idea is to consume a txt file and generate code from it during the build process. It is simple in order to show the mechanism, then you will be able to create a more complex piece of code. Part of this effort includes how to ship and consume the MSBuild Custom Task as a _NuGet package_.
 
    [Please see the Custom Task-Code Generation Readme](./custom-task-code-generation/)
 

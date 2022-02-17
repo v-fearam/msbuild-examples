@@ -4,7 +4,7 @@
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<version>1.0.0</version>
 		<title>AppSettingStronglyTyped</title>
-		<authors>John Doe</authors>
+		<authors>John</authors>
 		<description>Generates a strongly typed setting class base on a txt file</description>
 		<tags>MyTags</tags>
 		<copyright>Copyright ©Contoso 2022</copyright>

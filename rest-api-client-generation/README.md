@@ -24,7 +24,7 @@ The complete code version is in this PetReaderExecTaskExample folder, you can do
   - System.ComponentModel.Annotations, it will be needed to compile the generated client
 - On PetShopRestClient, add a folder (named PetShopRestClient) for the code generation and delete the Class1.cs automatically generated.
 - Create a text file named petshop-openapi-spec.json (on root). We are going to add the OpenApi spec, please copy the content from [here](https://petstore.swagger.io/v2/swagger.json) inside the file. Why did we commit the spec instead of read it online?, we like repetitive build and depending only from the input, consuming directly the api could transform a build which works today to a build which fails tomorrow from the same source. The picture saved on petshop-openapi-spec.json will allow us to still have a version which builds even if the spec changes.
-- Now, the most important part. We are going to modify PetShopRestClient.csproj and add a [MSBuild targets](https://docs.microsoft.com/visualstudio/msbuild/msbuild-targets?view=vs-2022) to generate the client during build process.
+- Now, the most important part. We are going to modify PetShopRestClient.csproj and add a [MSBuild targets](https://docs.microsoft.com/visualstudio/msbuild/msbuild-targets) to generate the client during build process.
 
   - First, we are going to add some props useful for our client generation
 
@@ -50,8 +50,8 @@ The complete code version is in this PetReaderExecTaskExample folder, you can do
     </Target>
     ```
 
-    You can notice we are using [BeforeTarget and AfterTarget](https://docs.microsoft.com/visualstudio/msbuild/target-build-order?view=vs-2022#beforetargets-and-aftertargets) as way to define build order.  
-    The first target called "generatePetClient" will be executed before the core compilation target, so we will create the source before the compiler executes. The input and output parameter are related to [Incremental Build](https://docs.microsoft.com/visualstudio/msbuild/how-to-build-incrementally?view=vs-2022). MSBuild can compare the timestamps of the input files with the timestamps of the output files and determine whether to skip, build, or partially rebuild a target.  
+    You can notice we are using [BeforeTarget and AfterTarget](https://docs.microsoft.com/visualstudio/msbuild/target-build-order#beforetargets-and-aftertargets) as way to define build order.  
+    The first target called "generatePetClient" will be executed before the core compilation target, so we will create the source before the compiler executes. The input and output parameter are related to [Incremental Build](https://docs.microsoft.com/visualstudio/msbuild/how-to-build-incrementally). MSBuild can compare the timestamps of the input files with the timestamps of the output files and determine whether to skip, build, or partially rebuild a target.  
     After installing the NSwag.MSBuild NuGet package in your project, you can use the variable $(NSwagExe) in your .csproj file to run the NSwag command line tool in an MSBuild target. This way the tools can easily be updated via NuGet. Here we are using the _Exec MSBUild Task_ to execute the NSwag program with the required parameters to generate the client Rest Api. [More about Nsawg command and parameters](https://github.com/RicoSuter/NSwag/wiki/NSwag.MSBuild).  
     You can capture output from `<Exec>` addig ConsoleToMsBuild="true" to your `<Exec>` tag and then capturing the output using the ConsoleOutput parameter in an `<Output>` tag. ConsoleOutput returns the output as an Item. Whitespace are trimmed. ConsoleOutput is enabled when ConsoleToMSBuild is true.  
     The second target called "forceReGenerationOnRebuild" deletes the generated class during clean up to force the re generation on rebuild target execution. This target runs after core clean msbuild pre defined target.
@@ -239,7 +239,7 @@ _Note:_This simple validation could be done in other way on the MSBuild file, bu
 
   :warning: Select the proper NSwagCommandFullPath value based on your computer
 
-  3. Add a [MSBuild targets](https://docs.microsoft.com/visualstudio/msbuild/msbuild-targets?view=vs-2022) to generate the client during build process. We are going to execute before the core compile execute to generates the code.
+  3. Add a [MSBuild targets](https://docs.microsoft.com/visualstudio/msbuild/msbuild-targets) to generate the client during build process. We are going to execute before the core compile execute to generates the code.
 
   ```xml
   <Target Name="generatePetClient" BeforeTargets="CoreCompile" Inputs="$(PetClientInputOpenApiSpec)" Outputs="$(PetClientFolderClientClass)\$(PetClientClientClassName).cs">
@@ -252,7 +252,7 @@ _Note:_This simple validation could be done in other way on the MSBuild file, bu
 	</Target>
   ```
   
-  Input and Output are related to [Incremental Build](https://docs.microsoft.com/visualstudio/msbuild/how-to-build-incrementally?view=vs-2022), and _forceReGenerationOnRebuild_ target delete the generated file after core clean, and it force the client re generation during the rebuild target execution.
+  Input and Output are related to [Incremental Build](https://docs.microsoft.com/visualstudio/msbuild/how-to-build-incrementally), and _forceReGenerationOnRebuild_ target delete the generated file after core clean, and it force the client re generation during the rebuild target execution.
 
 - Select "PetReaderToolTaskConsoleApp" and rebuild only that project. Now, the client code must be generated and the code compiles. It is possible to be executed and see how it works. We are generating from a file, and that is allowed.
 - On this step, we are going to show the parameter validation. On _PetRestApiClient.csproj_ change the prop _PetClientInputOpenApiSpec_ to use the url

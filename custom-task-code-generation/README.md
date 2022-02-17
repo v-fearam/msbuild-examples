@@ -180,7 +180,7 @@ First, we should modify the AppSettingStronglyTyped.csproj, adding
 Then we must create a _build_ folder and inside two text files: _AppSettingStronglyTyped.props_ and _AppSettingStronglyTyped.targets_.
 AppSettingStronglyTyped.props is imported very early in Microsoft.Common.props, and properties defined later are unavailable to it. So, avoid referring to properties that are not yet defined (and will evaluate to empty).
 
-Directory.Build.targets is imported from Microsoft.Common.targets after importing .targets files from NuGet packages. So, it can override properties and targets defined in most of the build logic, or set properties for all your projects regardless of what the individual projects set. You can see the [import order](https://docs.microsoft.com/visualstudio/msbuild/customize-your-build?view=vs-2022#import-order).  
+Directory.Build.targets is imported from Microsoft.Common.targets after importing .targets files from NuGet packages. So, it can override properties and targets defined in most of the build logic, or set properties for all your projects regardless of what the individual projects set. You can see the [import order](https://docs.microsoft.com/visualstudio/msbuild/customize-your-build#import-order).  
 _AppSettingStronglyTyped.props_ includes the task and define some prop with default values:
 
 ```xml
@@ -210,7 +210,7 @@ _AppSettingStronglyTyped.props_ includes the task and define some prop with defa
 </Project>
 ```
 
-Beyond the [build properties](https://docs.microsoft.com/visualstudio/msbuild/walkthrough-using-msbuild?view=vs-2022#build-properties) defined, actually, an important part of this file is the task registration, MSBuild must know how to locate and run the assembly that contains the task class. Tasks are registered using the [UsingTask element (MSBuild)](https://docs.microsoft.com/visualstudio/msbuild/usingtask-element-msbuild?view=vs-2022). TaskName is the name of the task to reference from the assembly. This attribute should always specify full namespaces. AssemblyFile is the file path of the assembly.
+Beyond the [build properties](https://docs.microsoft.com/visualstudio/msbuild/walkthrough-using-msbuild#build-properties) defined, actually, an important part of this file is the task registration, MSBuild must know how to locate and run the assembly that contains the task class. Tasks are registered using the [UsingTask element (MSBuild)](https://docs.microsoft.com/visualstudio/msbuild/usingtask-element-msbuild). TaskName is the name of the task to reference from the assembly. This attribute should always specify full namespaces. AssemblyFile is the file path of the assembly.
 
 The _AppSettingStronglyTyped.props_ will be automatically included when the package is installed, then our client has the task available and some default values. However, it is never used. In order to put this code in action we need to define some targets on _AppSettingStronglyTyped.targets_ file which also will be also automatically included when the package is install:
 
@@ -243,11 +243,11 @@ The _AppSettingStronglyTyped.props_ will be automatically included when the pack
 </Project>
 ```
 
-The first step is the creation of an [InputGroup](https://docs.microsoft.com/visualstudio/msbuild/msbuild-items?view=vs-2022) which represents the text files (there could be more than one) to read and it will be some of our task parameters. There are default for the location and the extension where we look for, but you can override the values defining the properties on the client MSBuild project file.
+The first step is the creation of an [InputGroup](https://docs.microsoft.com/visualstudio/msbuild/msbuild-items) which represents the text files (there could be more than one) to read and it will be some of our task parameters. There are default for the location and the extension where we look for, but you can override the values defining the properties on the client MSBuild project file.
 
-Then we define two [MSBuild targets](https://docs.microsoft.com/visualstudio/msbuild/msbuild-targets?view=vs-2022). We [extends the MSBuild process](https://docs.microsoft.com/visualstudio/msbuild/how-to-extend-the-visual-studio-build-process?view=vs-2022) overriding predefined targets:
+Then we define two [MSBuild targets](https://docs.microsoft.com/visualstudio/msbuild/msbuild-targets). We [extends the MSBuild process](https://docs.microsoft.com/visualstudio/msbuild/how-to-extend-the-visual-studio-build-process) overriding predefined targets:
 
-1. BeforeCompile: The goal is to call our custom task to generate the class and include the class to be compiled. Tasks that are inserted before core compilation is done. Input and Output fields are related to [incremental build](https://docs.microsoft.com/visualstudio/msbuild/incremental-builds?view=vs-2022). If all output items are up-to-date, MSBuild skips the target. This incremental build of the target can significantly improve the build speed. An item is considered up-to-date if its output file is the same age or newer than its input file or files.
+1. BeforeCompile: The goal is to call our custom task to generate the class and include the class to be compiled. Tasks that are inserted before core compilation is done. Input and Output fields are related to [incremental build](https://docs.microsoft.com/visualstudio/msbuild/incremental-builds). If all output items are up-to-date, MSBuild skips the target. This incremental build of the target can significantly improve the build speed. An item is considered up-to-date if its output file is the same age or newer than its input file or files.
 1. AfterClean: The goal is to delete the generated class file after a general clean happens. Tasks that are inserted after the core clean functionality is invoked. It forces the generation on MSBuild rebuild target execution.
 
 ### Step 5, Generates the NuGet package
@@ -367,4 +367,4 @@ For example (Note that the NuGet package is not referenced):
 </Project>
 ```
 
-_Note:_ You can notice we are using another way to order the targets [(BeforeTarget and AfterTarget)](https://docs.microsoft.com/visualstudio/msbuild/target-build-order?view=vs-2022#beforetargets-and-aftertargets). The note on [override predefined targets](https://docs.microsoft.com/visualstudio/msbuild/how-to-extend-the-visual-studio-build-process?view=vs-2022#override-predefined-targets) section on the MSBuild extension article on the says: 'SDK-style projects have an implicit import of targets after the last line of the project file. This means that you cannot override default targets unless you specify your imports manually'.
+_Note:_ You can notice we are using another way to order the targets [(BeforeTarget and AfterTarget)](https://docs.microsoft.com/visualstudio/msbuild/target-build-order#beforetargets-and-aftertargets). The note on [override predefined targets](https://docs.microsoft.com/visualstudio/msbuild/how-to-extend-the-visual-studio-build-process#override-predefined-targets) section on the MSBuild extension article on the says: 'SDK-style projects have an implicit import of targets after the last line of the project file. This means that you cannot override default targets unless you specify your imports manually'.

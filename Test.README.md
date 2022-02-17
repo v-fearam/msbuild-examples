@@ -2,7 +2,7 @@
 
 A really important item when we create a MSBuild Custom Task, which is going to be distributed, is to ensure the correctness.  
 The way to be confident about that is testing it.  
-It is out of scope to talk about the benefits of doing tests and basic test tooling. Here some [basics about unit tests.](https://docs.microsoft.com/visualstudio/test/walkthrough-creating-and-running-unit-tests-for-managed-code?view=vs-2022).  
+It is out of scope to talk about the benefits of doing tests and basic test tooling. Here some [basics about unit tests.](https://docs.microsoft.com/visualstudio/test/walkthrough-creating-and-running-unit-tests-for-managed-code).  
 We are going to use examples which have already been developed. The following projects includes unit and integration MSBuild Custom Tasks testing
 
 1. [Custom Task-Code Generation](./custom-task-code-generation/)

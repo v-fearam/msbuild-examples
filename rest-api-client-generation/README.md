@@ -95,7 +95,7 @@ We are going to generate a Custom Task derivated from [MSBuild Tool Task](https:
 
 The complete code version is in this PetReaderToolTaskExample folder, you can download and take a look. Anyway, we are going to go through step by step and explain some concept on the way.
 
-- We are going to create a new Visual Studio Project for the Custom Task. We will call it "RestApiClientGenerator" and it must be library c# netstandard2.0. The solution name will be "PetReaderToolTaskExample"
+- We are going to create a new Visual Studio Project for the Custom Task. We will call it "RestApiClientGenerator" and it must be library C# netstandard2.0. The solution name will be "PetReaderToolTaskExample"
 - Delete Class1.cs automatically generated
 - Add _Microsoft.Build.Utilities.Core_ NuGet package
 - Create a class called "RestApiClientGenerator"

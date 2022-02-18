@@ -8,13 +8,13 @@ The basic idea of the current example is defined as:
 Input text => Generation => Output C# (Some code generation)
 ```
 
-We are going to create a msbuild custom task named AppSettingStronglyTyped. The task is going to read a set of text files, and each file with lines with the following format:
+We are going to create a MSBuild custom task named AppSettingStronglyTyped. The task is going to read a set of text files, and each file with lines with the following format:
 
 ```
 propertyName:type:defaultValue
 ```
 
-Then our code will generate a c# class with all the constants. :innocent: This is not useful at all, it is simple, the idea is help us to learn the mechanism.  
+Then our code will generate a C# class with all the constants. :innocent: This is not useful at all, it is simple, the idea is help us to learn the mechanism.  
 A problem should stop the build and give us enough information.
 
 ## Step 1, create the AppSettingStronglyTyped project
@@ -30,9 +30,9 @@ If you want to share code between .NET Framework and any other .NET implementati
 
 ## Step 2, create the AppSettingStronglyTyped MSBuild Custom Task
 
-We need to create our MSBuild CustomTask. Information about how to [write msbuild custom task](https://docs.microsoft.com/visualstudio/msbuild/task-writing), it is good information to understand the following steps.
+We need to create our MSBuild CustomTask. Information about how to [write MSBuild custom task](https://docs.microsoft.com/visualstudio/msbuild/task-writing), it is good information to understand the following steps.
 
-We need to include _Microsoft.Build.Utilities.Core_ nuget package, and then create a AppSettingStronglyTyped derived from Microsoft.Build.Utilities.Task.
+We need to include _Microsoft.Build.Utilities.Core_ NuGet package, and then create a AppSettingStronglyTyped derived from Microsoft.Build.Utilities.Task.
 
 We are going use three parameters:
 
@@ -80,7 +80,7 @@ We need to override the Execute method. The execute method returns true if the t
 
 Then, the details are really not important for our purpose. You can copy from the source code and improve if you like.
 
-:shipit:Food for thought. We are generating c# code during build process as example.The task is like any other c# class, you could do whatever you want. For example sending an email, generating change log, reading github repository. This is the power of MSBuild Custom tasks.
+:shipit:Food for thought. We are generating C# code during build process as example.The task is like any other c# class, you could do whatever you want. For example, sending an email, generating change log, reading github repository. This is the power of MSBuild custom tasks.
 
 ### Step 3, Change the AppSettingStronglyTyped.csproj
 
@@ -100,7 +100,7 @@ We need to make some changes on the project file. Now we have something simple l
 </Project>
 ```
 
-We are going to generate a nuget package, so first we need to add some basic information
+We are going to generate a NuGet package, so first we need to add some basic information
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
@@ -160,7 +160,7 @@ Then, the dependencies of your MSBuild task must be packaged inside the package,
 
 ### Step 4, Include MSBuild props and targets in a package
 
-We recommend first reading the basics about [props and target](https://docs.microsoft.com/visualstudio/msbuild/customize-your-build) and then how to [include props and targets on a nuget](https://docs.microsoft.com/nuget/create-packages/creating-a-package#include-msbuild-props-and-targets-in-a-package).
+We recommend first reading the basics about [props and target](https://docs.microsoft.com/visualstudio/msbuild/customize-your-build) and then how to [include props and targets on a NuGet](https://docs.microsoft.com/nuget/create-packages/creating-a-package#include-msbuild-props-and-targets-in-a-package).
 
 In some cases, you might want to add custom build targets or properties in projects that consume your package, such as running a custom tool or process during build. You do this by placing files in the form <package_id>.targets or <package_id>.props within the \build folder of the project.  
 Files in the root \build folder are considered suitable for all target frameworks.  
@@ -180,7 +180,7 @@ First, we should modify the AppSettingStronglyTyped.csproj, adding
 Then we must create a _build_ folder and inside two text files: _AppSettingStronglyTyped.props_ and _AppSettingStronglyTyped.targets_.
 AppSettingStronglyTyped.props is imported very early in Microsoft.Common.props, and properties defined later are unavailable to it. So, avoid referring to properties that are not yet defined (and will evaluate to empty).
 
-Directory.Build.targets is imported from Microsoft.Common.targets after importing .targets files from NuGet packages. So, it can override properties and targets defined in most of the build logic, or set properties for all your projects regardless of what the individual projects set. You can see the [import order](https://docs.microsoft.com/visualstudio/msbuild/customize-your-build?view=vs-2022#import-order).  
+Directory.Build.targets is imported from Microsoft.Common.targets after importing .targets files from NuGet packages. So, it can override properties and targets defined in most of the build logic, or set properties for all your projects regardless of what the individual projects set. You can see the [import order](https://docs.microsoft.com/visualstudio/msbuild/customize-your-build#import-order).  
 _AppSettingStronglyTyped.props_ includes the task and define some prop with default values:
 
 ```xml
@@ -188,10 +188,10 @@ _AppSettingStronglyTyped.props_ includes the task and define some prop with defa
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<!--defining properties interesting for my task-->
 	<PropertyGroup>
-		<!--default directory where the .dll was publich inside a nuget package-->
+		<!--default directory where the .dll was publich inside a NuGet package-->
 		<taskForldername>lib</taskForldername>
 		<taskFramework>netstandard2.0</taskFramework>
-		<!--The folder where the custom task will be present. It points to inside the nuget package. -->
+		<!--The folder where the custom task will be present. It points to inside the NuGet package. -->
 		<CustomTasksFolder>$(MSBuildThisFileDirectory)..\$(taskForldername)\$(taskFramework)</CustomTasksFolder>
 		<!--Reference to the assembly which contains the MSBuild Task-->
 		<CustomTasksAssembly>$(CustomTasksFolder)\$(MSBuildThisFileName).dll</CustomTasksAssembly>
@@ -210,7 +210,7 @@ _AppSettingStronglyTyped.props_ includes the task and define some prop with defa
 </Project>
 ```
 
-Beyond the [build properties](https://docs.microsoft.com/visualstudio/msbuild/walkthrough-using-msbuild?view=vs-2022#build-properties) defined, actually, an important part of this file is the task registration, MSBuild must know how to locate and run the assembly that contains the task class. Tasks are registered using the [UsingTask element (MSBuild)](https://docs.microsoft.com/visualstudio/msbuild/usingtask-element-msbuild?view=vs-2022). TaskName is the name of the task to reference from the assembly. This attribute should always specify full namespaces. AssemblyFile is the file path of the assembly.
+Beyond the [build properties](https://docs.microsoft.com/visualstudio/msbuild/walkthrough-using-msbuild#build-properties) defined, actually, an important part of this file is the task registration, MSBuild must know how to locate and run the assembly that contains the task class. Tasks are registered using the [UsingTask element (MSBuild)](https://docs.microsoft.com/visualstudio/msbuild/usingtask-element-msbuild). TaskName is the name of the task to reference from the assembly. This attribute should always specify full namespaces. AssemblyFile is the file path of the assembly.
 
 The _AppSettingStronglyTyped.props_ will be automatically included when the package is installed, then our client has the task available and some default values. However, it is never used. In order to put this code in action we need to define some targets on _AppSettingStronglyTyped.targets_ file which also will be also automatically included when the package is install:
 
@@ -243,16 +243,16 @@ The _AppSettingStronglyTyped.props_ will be automatically included when the pack
 </Project>
 ```
 
-The first step is the creation of an [InputGroup](https://docs.microsoft.com/visualstudio/msbuild/msbuild-items?view=vs-2022) which represents the text files (there could be more than one) to read and it will be some of our task parameters. There are default for the location and the extension where we look for, but you can override the values defining the properties on the client msbuild project file.
+The first step is the creation of an [InputGroup](https://docs.microsoft.com/visualstudio/msbuild/msbuild-items) which represents the text files (there could be more than one) to read and it will be some of our task parameters. There are default for the location and the extension where we look for, but you can override the values defining the properties on the client MSBuild project file.
 
-Then we define two [MSBuild targets](https://docs.microsoft.com/visualstudio/msbuild/msbuild-targets?view=vs-2022). We [extends the MSBuild process](https://docs.microsoft.com/visualstudio/msbuild/how-to-extend-the-visual-studio-build-process?view=vs-2022) overriding predefined targets:
+Then we define two [MSBuild targets](https://docs.microsoft.com/visualstudio/msbuild/msbuild-targets). We [extends the MSBuild process](https://docs.microsoft.com/visualstudio/msbuild/how-to-extend-the-visual-studio-build-process) overriding predefined targets:
 
-1. BeforeCompile: The goal is to call our custom task to generate the class and include the class to be compiled. Tasks that are inserted before core compilation is done. Input and Output fields are related to [incremental build](https://docs.microsoft.com/visualstudio/msbuild/incremental-builds?view=vs-2022). If all output items are up-to-date, MSBuild skips the target. This incremental build of the target can significantly improve the build speed. An item is considered up-to-date if its output file is the same age or newer than its input file or files.
+1. BeforeCompile: The goal is to call our custom task to generate the class and include the class to be compiled. Tasks that are inserted before core compilation is done. Input and Output fields are related to [incremental build](https://docs.microsoft.com/visualstudio/msbuild/incremental-builds). If all output items are up-to-date, MSBuild skips the target. This incremental build of the target can significantly improve the build speed. An item is considered up-to-date if its output file is the same age or newer than its input file or files.
 1. AfterClean: The goal is to delete the generated class file after a general clean happens. Tasks that are inserted after the core clean functionality is invoked. It forces the generation on MSBuild rebuild target execution.
 
-### Step 5, Generates the nuget package
+### Step 5, Generates the NuGet package
 
-We can use Visual Studio (Right click on the project and select 'pack').
+We can use Visual Studio (Right-click on the project and select 'pack').
 We can also do it by command line. Move to the folder where the AppSettingStronglyTyped.csproj is present, and execute:
 
 ```dotnetcli
@@ -266,10 +266,10 @@ Congrats!! You must have `\AppSettingStronglyTyped\AppSettingStronglyTyped\AppSe
 
 ### Step 6, Generate console app and test our new MSBuild task
 
-Now, we are going to create a standard .Net Core console app for testing the nuget package generated.  
+Now, we are going to create a standard .Net Core console app for testing the NuGet package generated.  
 :warning: We need to avoid generating a MSBuild custom task in the same MSBuild process which is going to consume it. The new project should be in a completely different Visual Studio Solution or the new project uses a dll pre-generated and re-located from the standard output.  
 We could call MSBuildConsoleExample the new project on a new Visual Studio Solution.
-We must import the AppSettingStronglyTyped nuget. We need to define a new package source and define a local folder as package source, [please follow the instructions](https://docs.microsoft.com/nuget/consume-packages/install-use-packages-visual-studio#package-sources). Then copy our nuget on that folder and install it on our console app.
+We must import the AppSettingStronglyTyped NuGet. We need to define a new package source and define a local folder as package source, [please follow the instructions](https://docs.microsoft.com/nuget/consume-packages/install-use-packages-visual-studio#package-sources). Then copy our NuGet package on that folder and install it on our console app.
 
 Then, we should rebuild to be sure everything is ok.
 
@@ -302,7 +302,7 @@ Go to Program.cs and change the hardcoded 'Hello Word!!' to our constant
 
 We can execute the program, it will greet our generated class.
 
-_Note:_ It is a good practice include **PrivateAssets="All"** on the PackageReference. The project which use the MSBuild Custom Task as nuget. It should look like
+_Note:_ It is a good practice include **PrivateAssets="All"** on the PackageReference. The project which use the MSBuild Custom Task as NuGet. It should look like
 
 ```xml
 <ItemGroup>
@@ -330,9 +330,9 @@ The option `/t:rebuild` means run the rebuild target. It will force regeneration
 
 ### Development
 
-During development and debugging it could be hard to ship your custom task as a nuget package.  
-It could be easier to include all the information on .props and target directly on your MSBuildConsoleExample.csproj and then move to the nuget shipping format.
-For example (Note that the nuget is not referenced):
+During development and debugging it could be hard to ship your custom task as a NuGet package.  
+It could be easier to include all the information on .props and target directly on your MSBuildConsoleExample.csproj and then move to the NuGet shipping format.
+For example (Note that the NuGet package is not referenced):
 
 ```xml
 <Project Sdk="Microsoft.NET.Sdk">
@@ -367,4 +367,4 @@ For example (Note that the nuget is not referenced):
 </Project>
 ```
 
-_Note:_ You can notice we are using another way to order the targets [(BeforeTarget and AfterTarget)](https://docs.microsoft.com/visualstudio/msbuild/target-build-order?view=vs-2022#beforetargets-and-aftertargets). The note on [override predefined targets](https://docs.microsoft.com/visualstudio/msbuild/how-to-extend-the-visual-studio-build-process?view=vs-2022#override-predefined-targets) section on the msbuild extension article on the says: 'SDK-style projects have an implicit import of targets after the last line of the project file. This means that you cannot override default targets unless you specify your imports manually'.
+_Note:_ You can notice we are using another way to order the targets [(BeforeTarget and AfterTarget)](https://docs.microsoft.com/visualstudio/msbuild/target-build-order#beforetargets-and-aftertargets). The note on [override predefined targets](https://docs.microsoft.com/visualstudio/msbuild/how-to-extend-the-visual-studio-build-process#override-predefined-targets) section on the MSBuild extension article on the says: 'SDK-style projects have an implicit import of targets after the last line of the project file. This means that you cannot override default targets unless you specify your imports manually'.

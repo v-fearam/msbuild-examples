@@ -2,7 +2,7 @@
 
 A really important item when we create a MSBuild Custom Task, which is going to be distributed, is to ensure the correctness.  
 The way to be confident about that is testing it.  
-It is out of scope to talk about the benefits of doing tests and basic test tooling. Here some [basics about unit tests.](https://docs.microsoft.com/visualstudio/test/walkthrough-creating-and-running-unit-tests-for-managed-code?view=vs-2022).  
+It is out of scope to talk about the benefits of doing tests and basic test tooling. Here some [basics about unit tests.](https://docs.microsoft.com/visualstudio/test/walkthrough-creating-and-running-unit-tests-for-managed-code).  
 We are going to use examples which have already been developed. The following projects includes unit and integration MSBuild Custom Tasks testing
 
 1. [Custom Task-Code Generation](./custom-task-code-generation/)
@@ -129,7 +129,7 @@ Now we need to create each test. Each test will need its own msbuild file defini
 </Project>
 ```
 
-Our test arrangement will be the indication to build this msbuild file.
+Our test arrangement will be the indication to build this MSBuild file.
 
 ```csharp
  //Arrage
@@ -166,7 +166,7 @@ Last but not least, we are going to assess the expected result.
   Assert.IsTrue(File.ReadLines(".\\Resources\\MySettingSuccess.generated.cs").SequenceEqual(File.ReadLines(".\\Resources\\testscript-success-class.txt"))); // asserting the file content
 ```
 
-## MSBuildProjectCreator nuget package
+## MSBuildProjectCreator NuGet package
 
 [MSBuildProjectCreator](https://github.com/jeffkl/MSBuildProjectCreator) is a class library with a fluent interface for generating MSBuild projects and NuGet package repositories. It executes from msbuild script our MSBuild Custom Task, it is more likely an integration test, but the library is defined primarily for unit tests that need MSBuild projects to do their testing.  
 Use the TryBuild methods to build your projects. TryBuild returns a BuildOutput object which captures the build output for you.  
@@ -196,7 +196,7 @@ First we need to define our project file, for example:
          .Save(".\\PetRestApiClientSuccessFluent.msbuild");
 ```
 
-The way to execute the msbuild script is:
+The way to execute the MSBuild script is:
 
 ```csharp
       //Act

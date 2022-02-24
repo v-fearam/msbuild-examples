@@ -39,7 +39,7 @@ namespace RestApiClientGenerator.Test
             };
             restApiClientGenerator.BuildEngine = buildEngine.Object;
 
-            //act
+            //Act
             var result = restApiClientGenerator.Execute();
 
             //Assert
@@ -47,7 +47,7 @@ namespace RestApiClientGenerator.Test
             Assert.AreEqual(errors.Count, 0);
             Assert.IsTrue(File.Exists($"{restApiClientGenerator.FolderClientClass}\\{restApiClientGenerator.ClientClassName}.cs"));
 
-            //creanup
+            //Cleanup
             File.Delete($"{restApiClientGenerator.FolderClientClass}\\{restApiClientGenerator.ClientClassName}.cs");
         }
 
@@ -65,7 +65,7 @@ namespace RestApiClientGenerator.Test
             };
             restApiClientGenerator.BuildEngine = buildEngine.Object;
 
-            //act
+            //Act
             var result = restApiClientGenerator.Execute();
 
             //Assert
@@ -89,7 +89,7 @@ namespace RestApiClientGenerator.Test
             };
             restApiClientGenerator.BuildEngine = buildEngine.Object;
 
-            //act
+            //Act
             var result = restApiClientGenerator.Execute();
 
             //Assert

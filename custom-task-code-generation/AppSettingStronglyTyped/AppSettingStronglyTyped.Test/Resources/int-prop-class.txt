@@ -1,5 +1,5 @@
-﻿ using System; 
- namespace MyNamespace { 
+﻿ using System;
+ namespace MyNamespace {
 
   public class MyintPropSetting {
     public readonly static int  Age = 33;

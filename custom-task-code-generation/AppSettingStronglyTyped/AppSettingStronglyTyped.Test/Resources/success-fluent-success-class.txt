@@ -1,5 +1,5 @@
-﻿ using System; 
- namespace SettingSuccessFluent { 
+﻿ using System;
+ namespace SettingSuccessFluent {
 
   public class SettingSuccessFluent {
     public readonly static string  Prop1 = "Hello";

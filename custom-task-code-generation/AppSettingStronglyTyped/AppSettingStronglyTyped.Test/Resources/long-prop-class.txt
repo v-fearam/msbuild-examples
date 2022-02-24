@@ -1,5 +1,5 @@
-﻿ using System; 
- namespace MyNamespace { 
+﻿ using System;
+ namespace MyNamespace {
 
   public class MylongPropSetting {
     public readonly static long  Population = 200000001;

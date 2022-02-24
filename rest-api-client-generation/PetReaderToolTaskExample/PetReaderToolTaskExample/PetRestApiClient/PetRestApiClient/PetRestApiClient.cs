@@ -18,7 +18,7 @@ namespace PetRestApiClient
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.15.7.0 (NJsonSchema v10.6.7.0 (Newtonsoft.Json v11.0.0.0))")]
-    public partial class PetRestApiClient 
+    public partial class PetRestApiClient
     {
         private string _baseUrl = "https://petstore.swagger.io/v2";
         private System.Net.Http.HttpClient _httpClient;

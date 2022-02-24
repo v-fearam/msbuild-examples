@@ -2,7 +2,7 @@
 
 Nowadays, an application which consumes RestApi is a very common scenario. We are going to generate the Rest API client automatically during build process. We will use [NSawg](https://docs.microsoft.com/aspnet/core/tutorials/getting-started-with-nswag?view=aspnetcore-6.0&tabs=visual-studio)
 
-Our app will be a console app, because it is simpler. The kind of app which use the Rest Api client is not important.  
+Our app will be a console app, because it is simpler. The kind of app which use the Rest Api client is not important.
 The example will consume the public [Pet Store API](https://petstore.swagger.io), which publish the [OpenAPI spec](https://petstore.swagger.io/v2/swagger.json)
 
 If you are not clear on terms such as tasks, targets, properties, or runtimes, you could first check out the docs that explain these concepts, starting with the [MSBuild Concepts article](https://docs.microsoft.com/visualstudio/msbuild/msbuild-concepts).
@@ -53,7 +53,7 @@ The complete code version is in this PetReaderExecTaskExample folder, you can do
     You can notice we are using [BeforeTarget and AfterTarget](https://docs.microsoft.com/visualstudio/msbuild/target-build-order#beforetargets-and-aftertargets) as way to define build order.  
     The first target called "generatePetClient" will be executed before the core compilation target, so we will create the source before the compiler executes. The input and output parameter are related to [Incremental Build](https://docs.microsoft.com/visualstudio/msbuild/how-to-build-incrementally). MSBuild can compare the timestamps of the input files with the timestamps of the output files and determine whether to skip, build, or partially rebuild a target.  
     After installing the NSwag.MSBuild NuGet package in your project, you can use the variable $(NSwagExe) in your .csproj file to run the NSwag command line tool in an MSBuild target. This way the tools can easily be updated via NuGet. Here we are using the _Exec MSBUild Task_ to execute the NSwag program with the required parameters to generate the client Rest Api. [More about Nsawg command and parameters](https://github.com/RicoSuter/NSwag/wiki/NSwag.MSBuild).  
-    You can capture output from `<Exec>` addig ConsoleToMsBuild="true" to your `<Exec>` tag and then capturing the output using the ConsoleOutput parameter in an `<Output>` tag. ConsoleOutput returns the output as an Item. Whitespace are trimmed. ConsoleOutput is enabled when ConsoleToMSBuild is true.  
+    You can capture output from `<Exec>` addig ConsoleToMsBuild="true" to your `<Exec>` tag and then capturing the output using the ConsoleOutput parameter in an `<Output>` tag. ConsoleOutput returns the output as an Item. Whitespace are trimmed. ConsoleOutput is enabled when ConsoleToMSBuild is true.
     The second target called "forceReGenerationOnRebuild" deletes the generated class during clean up to force the re generation on rebuild target execution. This target runs after core clean msbuild pre defined target.
 
 - At this point in time we can execute a Visual Studio Solution rebuild and see the client generated on the PetShopRestClient folder.
@@ -87,8 +87,8 @@ The complete code version is in this PetReaderExecTaskExample folder, you can do
 ## Option 2: Use the Custom task derived from MSBuid Tool Task
 
 In many cases the option 1 is good enough to execute an external tools to do something, like Rest Api Client Code Generation.
-We are going to continue with the same example, but the ideas can be used for others examples.  
-What if we want to allow Rest Api Client Code Generation if only if we don't use absolute Windows path as input? Or What if we need to calculate in some way where the executable is?.  
+We are going to continue with the same example, but the ideas can be used for others examples.
+What if we want to allow Rest Api Client Code Generation if only if we don't use absolute Windows path as input? Or What if we need to calculate in some way where the executable is?.
 When there is any situation where we need execute some code to do extra work, the [MSBuild Tool Task](https://docs.microsoft.com/dotnet/api/microsoft.build.utilities.tooltask) is the best solution. This is an abstract class derivated from MSBuild Task, we need to define a concrete subclass (_We will need to create a Custom MSBuild Task_). It is prepare for command execution and allows us to introduce code during the process.
 
 We are going to generate a Custom Task derivated from [MSBuild Tool Task](https://docs.microsoft.com/dotnet/api/microsoft.build.utilities.tooltask) which will generate a Rest API client but it will fail if we try to reference the OpenApi spec using a http address. NSwag supports a http address as OpenApi spec input, but we don't want to allow that. It is recommended read about [Custom task code generation](../custom-task-code-generation/) first, that article contains useful information about Custom Task creation.
@@ -251,7 +251,7 @@ _Note:_This simple validation could be done in other way on the MSBuild file, bu
 		<Delete Files="$(PetClientFolderClientClass)\$(PetClientClientClassName).cs"></Delete>
 	</Target>
   ```
-  
+
   Input and Output are related to [Incremental Build](https://docs.microsoft.com/visualstudio/msbuild/how-to-build-incrementally), and _forceReGenerationOnRebuild_ target delete the generated file after core clean, and it force the client re generation during the rebuild target execution.
 
 - Select "PetReaderToolTaskConsoleApp" and rebuild only that project. Now, the client code must be generated and the code compiles. It is possible to be executed and see how it works. We are generating from a file, and that is allowed.
@@ -268,5 +268,5 @@ _Note:_ If you like to publish your custom task as NuGet package, please read th
 #### Downloading code
 
 We need to install [NSwag command line tool](https://github.com/RicoSuter/NSwag/releases). Then,  we need the full path to the directory where NSwag.exe is located. After that, edit PetRestApiClient.csproj selecting the proper NSwagCommandFullPath value based on your computer.
-Now, select "RestApiClientGenerator" and build only that project, and finally select and rebuild "PetReaderToolTaskConsoleApp".  
+Now, select "RestApiClientGenerator" and build only that project, and finally select and rebuild "PetReaderToolTaskConsoleApp".
 You can execute "PetReaderToolTaskConsoleApp".

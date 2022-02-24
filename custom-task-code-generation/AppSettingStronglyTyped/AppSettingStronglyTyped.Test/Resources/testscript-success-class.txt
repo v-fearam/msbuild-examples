@@ -1,5 +1,5 @@
-﻿ using System; 
- namespace example { 
+﻿ using System;
+ namespace example {
 
   public class MySettingSuccess {
     public readonly static string  Prop1 = "Hello";

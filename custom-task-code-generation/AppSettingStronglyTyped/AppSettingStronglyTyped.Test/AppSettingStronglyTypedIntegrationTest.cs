@@ -59,7 +59,7 @@ namespace AppSettingStronglyTyped.Test
             Assert.IsTrue(File.Exists(".\\Resources\\MySettingSuccess.generated.cs"));
             Assert.IsTrue(File.ReadLines(".\\Resources\\MySettingSuccess.generated.cs").SequenceEqual(File.ReadLines(".\\Resources\\testscript-success-class.txt")));
 
-            //creanup
+            //Cleanup
             File.Delete(".\\Resources\\MySettingSuccess.generated.cs");
         }
 

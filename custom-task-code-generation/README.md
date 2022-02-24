@@ -162,8 +162,8 @@ Then, the dependencies of your MSBuild task must be packaged inside the package,
 
 We recommend first reading the basics about [props and target](https://docs.microsoft.com/visualstudio/msbuild/customize-your-build) and then how to [include props and targets on a NuGet](https://docs.microsoft.com/nuget/create-packages/creating-a-package#include-msbuild-props-and-targets-in-a-package).
 
-In some cases, you might want to add custom build targets or properties in projects that consume your package, such as running a custom tool or process during build. You do this by placing files in the form <package_id>.targets or <package_id>.props within the \build folder of the project.  
-Files in the root \build folder are considered suitable for all target frameworks.  
+In some cases, you might want to add custom build targets or properties in projects that consume your package, such as running a custom tool or process during build. You do this by placing files in the form <package_id>.targets or <package_id>.props within the \build folder of the project.
+Files in the root \build folder are considered suitable for all target frameworks.
 In this next step we’ll wire up the task implementation in a .props and .targets file, which will be included in our NuGet package and automatically loaded from a referencing project.
 First, we should modify the AppSettingStronglyTyped.csproj, adding
 
@@ -180,7 +180,7 @@ First, we should modify the AppSettingStronglyTyped.csproj, adding
 Then we must create a _build_ folder and inside two text files: _AppSettingStronglyTyped.props_ and _AppSettingStronglyTyped.targets_.
 AppSettingStronglyTyped.props is imported very early in Microsoft.Common.props, and properties defined later are unavailable to it. So, avoid referring to properties that are not yet defined (and will evaluate to empty).
 
-Directory.Build.targets is imported from Microsoft.Common.targets after importing .targets files from NuGet packages. So, it can override properties and targets defined in most of the build logic, or set properties for all your projects regardless of what the individual projects set. You can see the [import order](https://docs.microsoft.com/visualstudio/msbuild/customize-your-build#import-order).  
+Directory.Build.targets is imported from Microsoft.Common.targets after importing .targets files from NuGet packages. So, it can override properties and targets defined in most of the build logic, or set properties for all your projects regardless of what the individual projects set. You can see the [import order](https://docs.microsoft.com/visualstudio/msbuild/customize-your-build#import-order).
 _AppSettingStronglyTyped.props_ includes the task and define some prop with default values:
 
 ```xml
@@ -266,8 +266,8 @@ Congrats!! You must have `\AppSettingStronglyTyped\AppSettingStronglyTyped\AppSe
 
 ### Step 6, Generate console app and test our new MSBuild task
 
-Now, we are going to create a standard .Net Core console app for testing the NuGet package generated.  
-:warning: We need to avoid generating a MSBuild custom task in the same MSBuild process which is going to consume it. The new project should be in a completely different Visual Studio Solution or the new project uses a dll pre-generated and re-located from the standard output.  
+Now, we are going to create a standard .Net Core console app for testing the NuGet package generated.
+:warning: We need to avoid generating a MSBuild custom task in the same MSBuild process which is going to consume it. The new project should be in a completely different Visual Studio Solution or the new project uses a dll pre-generated and re-located from the standard output.
 We could call MSBuildConsoleExample the new project on a new Visual Studio Solution.
 We must import the AppSettingStronglyTyped NuGet. We need to define a new package source and define a local folder as package source, [please follow the instructions](https://docs.microsoft.com/nuget/consume-packages/install-use-packages-visual-studio#package-sources). Then copy our NuGet package on that folder and install it on our console app.
 
@@ -330,7 +330,7 @@ The option `/t:rebuild` means run the rebuild target. It will force regeneration
 
 ### Development
 
-During development and debugging it could be hard to ship your custom task as a NuGet package.  
+During development and debugging it could be hard to ship your custom task as a NuGet package.
 It could be easier to include all the information on .props and target directly on your MSBuildConsoleExample.csproj and then move to the NuGet shipping format.
 For example (Note that the NuGet package is not referenced):
 

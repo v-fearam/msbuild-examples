@@ -26,37 +26,37 @@ namespace AppSettingStronglyTyped.Test
         [TestMethod]
         public void EmptySettingFileList_EmptyClassGenerated()
         {
-            //arrange
+            //Arrange
             var appSettingStronglyTyped = new AppSettingStronglyTyped { SettingClassName = "MySettingEmpty", SettingNamespaceName = "MyNamespace", SettingFiles = new ITaskItem[0] };
             appSettingStronglyTyped.BuildEngine = buildEngine.Object;
 
-            //act
+            //Act
             var success = appSettingStronglyTyped.Execute();
 
-            //assert
+            //Assert
             Assert.IsTrue(success);
             Assert.AreEqual(errors.Count, 0);
             Assert.AreEqual("MySettingEmpty.generated.cs", appSettingStronglyTyped.ClassNameFile);
             Assert.IsTrue(File.Exists(appSettingStronglyTyped.ClassNameFile));
             Assert.IsTrue(File.ReadLines(appSettingStronglyTyped.ClassNameFile).SequenceEqual(File.ReadLines(".\\Resources\\empty-class.txt")));
 
-            //creanup
+            //Cleanup
             File.Delete(appSettingStronglyTyped.ClassNameFile);
         }
 
         [TestMethod]
         public void SettingFileBadFormat_NotSuccess()
         {
-            //arrange
+            //Arrange
             var item = new Mock<ITaskItem>();
             item.Setup(x => x.GetMetadata("FullPath")).Returns(".\\Resources\\error-prop.setting");
             var appSettingStronglyTyped = new AppSettingStronglyTyped { SettingClassName = "ErrorPropSetting", SettingNamespaceName = "MyNamespace", SettingFiles = new[] { item.Object } };
             appSettingStronglyTyped.BuildEngine = buildEngine.Object;
 
-            //act
+            //Act
             var success = appSettingStronglyTyped.Execute();
 
-            //assert
+            //Assert
             Assert.IsFalse(success);
             Assert.AreEqual(errors.Count, 1);
             Assert.AreEqual(null, appSettingStronglyTyped.ClassNameFile);
@@ -72,16 +72,16 @@ namespace AppSettingStronglyTyped.Test
         [TestMethod]
         public void SettingInvalidType_NotSuccess()
         {
-            //arrange
+            //Arrange
             var item = new Mock<ITaskItem>();
             item.Setup(x => x.GetMetadata("FullPath")).Returns(".\\Resources\\notvalidtype-prop.setting");
             var appSettingStronglyTyped = new AppSettingStronglyTyped { SettingClassName = "ErrorPropSetting", SettingNamespaceName = "MyNamespace", SettingFiles = new[] { item.Object } };
             appSettingStronglyTyped.BuildEngine = buildEngine.Object;
 
-            //act
+            //Act
             var success = appSettingStronglyTyped.Execute();
 
-            //assert
+            //Assert
             Assert.IsFalse(success);
             Assert.AreEqual(errors.Count, 1);
             Assert.AreEqual(null, appSettingStronglyTyped.ClassNameFile);
@@ -91,16 +91,16 @@ namespace AppSettingStronglyTyped.Test
         [TestMethod]
         public void SettingInvalidValue_NotSuccess()
         {
-            //arrange
+            //Arrange
             var item = new Mock<ITaskItem>();
             item.Setup(x => x.GetMetadata("FullPath")).Returns(".\\Resources\\notvalidvalue-prop.setting");
             var appSettingStronglyTyped = new AppSettingStronglyTyped { SettingClassName = "ErrorPropSetting", SettingNamespaceName = "MyNamespace", SettingFiles = new[] { item.Object } };
             appSettingStronglyTyped.BuildEngine = buildEngine.Object;
 
-            //act
+            //Act
             var success = appSettingStronglyTyped.Execute();
 
-            //assert
+            //Assert
             Assert.IsFalse(success);
             Assert.AreEqual(errors.Count, 1);
             Assert.AreEqual(null, appSettingStronglyTyped.ClassNameFile);
@@ -115,46 +115,46 @@ namespace AppSettingStronglyTyped.Test
         [DataRow("long")]
         public void SettingFileWithProperty_ClassGeneratedWithOneProperty(string value)
         {
-            //arrange
+            //Arrange
             var item = new Mock<ITaskItem>();
             item.Setup(x => x.GetMetadata("FullPath")).Returns($".\\Resources\\{value}-prop.setting");
             var appSettingStronglyTyped = new AppSettingStronglyTyped { SettingClassName = $"My{value}PropSetting", SettingNamespaceName = "MyNamespace", SettingFiles = new[] { item.Object } };
             appSettingStronglyTyped.BuildEngine = buildEngine.Object;
 
-            //act
+            //Act
             var success = appSettingStronglyTyped.Execute();
 
-            //assert
+            //Assert
             Assert.IsTrue(success);
             Assert.AreEqual(errors.Count, 0);
             Assert.AreEqual($"My{value}PropSetting.generated.cs", appSettingStronglyTyped.ClassNameFile);
             Assert.IsTrue(File.Exists(appSettingStronglyTyped.ClassNameFile));
             Assert.IsTrue(File.ReadLines(appSettingStronglyTyped.ClassNameFile).SequenceEqual(File.ReadLines($".\\Resources\\{value}-prop-class.txt")));
 
-            //creanup
+            //Cleanup
             File.Delete(appSettingStronglyTyped.ClassNameFile);
         }
 
         [DataTestMethod]
         public void SettingFileWithMultipleProperty_ClassGeneratedWithMultipleProperty()
         {
-            //arrange
+            //Arrange
             var item = new Mock<ITaskItem>();
             item.Setup(x => x.GetMetadata("FullPath")).Returns($".\\Resources\\complete-prop.setting");
             var appSettingStronglyTyped = new AppSettingStronglyTyped { SettingClassName = $"MyCompletePropSetting", SettingNamespaceName = "MyNamespace", SettingFiles = new[] { item.Object } };
             appSettingStronglyTyped.BuildEngine = buildEngine.Object;
 
-            //act
+            //Act
             var success = appSettingStronglyTyped.Execute();
 
-            //assert
+            //Assert
             Assert.IsTrue(success);
             Assert.AreEqual(errors.Count, 0);
             Assert.AreEqual($"MyCompletePropSetting.generated.cs", appSettingStronglyTyped.ClassNameFile);
             Assert.IsTrue(File.Exists(appSettingStronglyTyped.ClassNameFile));
             Assert.IsTrue(File.ReadLines(appSettingStronglyTyped.ClassNameFile).SequenceEqual(File.ReadLines(".\\Resources\\complete-prop-class.txt")));
 
-            //creanup
+            //Cleanup
             File.Delete(appSettingStronglyTyped.ClassNameFile);
         }
 

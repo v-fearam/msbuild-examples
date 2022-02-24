@@ -37,7 +37,7 @@ namespace RestApiClientGenerator.Test
         public void executeSuccessBuildFromFile()
         {
             //Arrage
-            buildProcess.StartInfo.Arguments = "build .\\Resources\\testscript-success.msbuild /t:generatePetClient";
+            buildProcess.StartInfo.Arguments = "build -nodeReuse:false .\\Resources\\testscript-success.msbuild /t:generatePetClient";
 
             //Act
             ExecuteCommandAndCollectResults();

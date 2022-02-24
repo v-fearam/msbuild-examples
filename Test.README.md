@@ -166,52 +166,6 @@ Last but not least, we are going to assess the expected result.
   Assert.IsTrue(File.ReadLines(".\\Resources\\MySettingSuccess.generated.cs").SequenceEqual(File.ReadLines(".\\Resources\\testscript-success-class.txt"))); // asserting the file content
 ```
 
-## MSBuildProjectCreator NuGet package
-
-[MSBuildProjectCreator](https://github.com/jeffkl/MSBuildProjectCreator) is a class library with a fluent interface for generating MSBuild projects and NuGet package repositories. It executes from msbuild script our MSBuild Custom Task, it is more likely an integration test, but the library is defined primarily for unit tests that need MSBuild projects to do their testing.  
-Use the TryBuild methods to build your projects. TryBuild returns a BuildOutput object which captures the build output for you.  
-Note: Projects are built in a different process to avoid assembly load conflicts so projects must be saved before being built.
-
-We have a complete example [here](./custom-task-code-generation/AppSettingStronglyTyped/AppSettingStronglyTyped.Test/AppSettingStronglyTypedIntegrationFluentTest.cs)
-
-First we need to define our project file, for example:
-
-```csharp
-        //Arrange
-        ProjectCreator creator = ProjectCreator.Create("test.proj")
-         .Sdk("Microsoft.NET.Sdk")
-         .UsingTaskAssemblyFile("AppSettingStronglyTyped.AppSettingStronglyTyped", "AppSettingStronglyTyped.dll")
-         .Property("SettingClass", "SettingSuccessFluent")
-         .Property("SettingNamespace", "SettingSuccessFluent")
-         .ItemInclude("SettingFiles", ".\\Resources\\complete-prop.setting")
-         .Target(name: "generateSettingClass", beforeTargets: "CoreCompile")
-         .Task(
-              name: "AppSettingStronglyTyped",
-              parameters: new Dictionary<string, string>
-              {
-                 { "SettingClassName", "$(SettingClass)" },
-                 { "SettingNamespaceName", "$(SettingNamespace)" },
-                 { "SettingFiles", "@(SettingFiles)" }
-              })
-         .Save(".\\PetRestApiClientSuccessFluent.msbuild");
-```
-
-The way to execute the MSBuild script is:
-
-```csharp
-      //Act
-      creator.TryBuild(target: "generateSettingClass", out bool success, out BuildOutput log);
-```
-
-And we need to assert the expected results:
-
-```csharp
-    //Assert
-    Assert.IsTrue(success); //Build success
-    Assert.IsTrue(File.Exists("SettingSuccessFluent.generated.cs")); // Asserting the file was generated
-    Assert.IsTrue(File.ReadLines(".\\SettingSuccessFluent.generated.cs").SequenceEqual(File.ReadLines(".\\Resources\\success-fluent-success-class.txt"))); // Asserting file content
-```
-
 ## Conclusion
 
 Testing is the only way to ensure the correctness. Unit test is really useful because you can test and debug all the scenarios easily, but having some, at least some basic, integration test is key to ensure the task executes in a build context.  

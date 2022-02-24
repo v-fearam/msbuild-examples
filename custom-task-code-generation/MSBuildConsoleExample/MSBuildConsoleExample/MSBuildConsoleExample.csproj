@@ -11,5 +11,5 @@
 
 	<PropertyGroup>
 		<SettingNamespace>MSBuildConsoleExample</SettingNamespace>
-	</PropertyGroup>	
+	</PropertyGroup>
 </Project>

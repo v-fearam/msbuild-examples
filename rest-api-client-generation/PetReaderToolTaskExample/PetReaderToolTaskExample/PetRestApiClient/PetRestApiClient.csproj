@@ -3,7 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>netstandard2.1</TargetFramework>
 	</PropertyGroup>
-	
+
 	<PropertyGroup>
 		<!--The place where the OpenApi spec is in-->
 		<PetClientInputOpenApiSpec>petshop-openapi-spec.json</PetClientInputOpenApiSpec>
@@ -26,7 +26,7 @@
 	<Target Name="generatePetClient" BeforeTargets="CoreCompile" Inputs="$(PetClientInputOpenApiSpec)" Outputs="$(PetClientFolderClientClass)\$(PetClientClientClassName).cs">
 		<RestApiClientGenerator InputOpenApiSpec="$(PetClientInputOpenApiSpec)" ClientClassName="$(PetClientClientClassName)" ClientNamespaceName="$(PetClientClientNamespaceName)" FolderClientClass="$(PetClientFolderClientClass)" NSwagCommandFullPath="$(NSwagCommandFullPath)"></RestApiClientGenerator>
 	</Target>
-	
+
     <Target Name="forceReGenerationOnRebuild" AfterTargets="CoreClean">
 		<Delete Files="$(PetClientFolderClientClass)\$(PetClientClientClassName).cs"></Delete>
 	</Target>

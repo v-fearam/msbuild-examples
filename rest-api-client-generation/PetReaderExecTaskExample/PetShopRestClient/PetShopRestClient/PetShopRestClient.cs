@@ -17,7 +17,7 @@ namespace PetShopRestClient
     using System = global::System;
 
     [System.CodeDom.Compiler.GeneratedCode("NSwag", "13.15.5.0 (NJsonSchema v10.6.6.0 (Newtonsoft.Json v11.0.0.0))")]
-    public partial class PetShopRestClient 
+    public partial class PetShopRestClient
     {
         private string _baseUrl = "https://petstore.swagger.io/v2";
         private System.Net.Http.HttpClient _httpClient;
@@ -1944,7 +1944,7 @@ namespace PetShopRestClient
                     return converted == null ? string.Empty : converted;
                 }
             }
-            else if (value is bool) 
+            else if (value is bool)
             {
                 return System.Convert.ToString((bool)value, cultureInfo).ToLowerInvariant();
             }

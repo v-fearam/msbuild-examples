@@ -37,11 +37,11 @@ namespace RestApiClientGenerator
             //http address is not allowed
             var valid = true;
             if (InputOpenApiSpec.StartsWith("http:") || InputOpenApiSpec.StartsWith("https:"))
-            { 
+            {
                 valid = false;
                 Log.LogError("URL is not allowed");
             }
-                
+
             return valid;
         }
     }

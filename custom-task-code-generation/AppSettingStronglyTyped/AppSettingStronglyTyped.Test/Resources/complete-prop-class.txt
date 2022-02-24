@@ -1,5 +1,5 @@
-﻿ using System; 
- namespace MyNamespace { 
+﻿ using System;
+ namespace MyNamespace {
 
   public class MyCompletePropSetting {
     public readonly static string  Prop1 = "Hello";

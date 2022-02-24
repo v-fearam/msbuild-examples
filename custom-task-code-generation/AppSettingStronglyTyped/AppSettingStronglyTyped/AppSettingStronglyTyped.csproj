@@ -18,7 +18,7 @@
 	<ItemGroup>
 		<PackageReference Include="Microsoft.Build.Utilities.Core" Version="17.0.0" />
 	</ItemGroup>
-	
+
 	<ItemGroup>
 		<!-- These lines pack the build props/targets files to the `build` folder in the generated package.
          By convention, the .NET SDK will look for build\<Package Id>.props and build\<Package Id>.targets 
@@ -26,7 +26,7 @@
 		<Content Include="build\AppSettingStronglyTyped.props" PackagePath="build\" />
 		<Content Include="build\AppSettingStronglyTyped.targets" PackagePath="build\" />
 	</ItemGroup>
-	
+
 	<Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
 		<ItemGroup>
 			<!-- The dependencies of your MSBuild task must be packaged inside the package, they cannot be expressed as normal PackageReferences -->

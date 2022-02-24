@@ -120,9 +120,9 @@ namespace AppSettingStronglyTyped
                 ClassNameFile = $"{SettingClassName}.generated.cs";
                 File.Delete(ClassNameFile);
                 StringBuilder settingsClass = new StringBuilder(1024);
-                // open namespace  
-                settingsClass.Append($@" using System; 
- namespace {SettingNamespaceName} {{ 
+                // open namespace
+                settingsClass.Append($@" using System;
+ namespace {SettingNamespaceName} {{
 
   public class {SettingClassName} {{
 ");

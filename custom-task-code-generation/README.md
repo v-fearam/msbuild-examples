@@ -14,19 +14,19 @@ We are going to create a MSBuild custom task named AppSettingStronglyTyped. The 
 propertyName:type:defaultValue
 ```
 
-Then our code will generate a C# class with all the constants. :innocent: This is not useful at all, it is simple, the idea is help us to learn the mechanism.  
+Then our code will generate a C# class with all the constants. :innocent: This is not useful at all, it is simple, the idea is to help us to learn the mechanism.  
 A problem should stop the build and give us enough information.
 
 ## Step 1, create the AppSettingStronglyTyped project
 
 Create a Class Library Net Standard. The Framework should be .Net Standard 2.0.
 
-:warning: Before we go too far, you must first understand the different between “full” MSBuild (the one that powers Visual Studio) and “portable” MSBuild, or the one bundled in the .NET Core Command Line.
+:warning: Before we go too far, you must first understand the difference between “full” MSBuild (the one that powers Visual Studio) and “portable” MSBuild, or the one bundled in the .NET Core Command Line.
 
 - Full MSBuild: This version of MSBuild usually lives inside Visual Studio. Runs on .NET Framework. Visual Studio uses this when you execute “Build” on your solution or project.
 - Dotnet MSBuild: This version of MSBuild is bundled in the .NET Core Command Line. Runs on .NET Core. Visual Studio does not directly invoke this version of MSBuild. Currently only supports projects that build using Microsoft.NET.Sdk.
 
-If you want to share code between .NET Framework and any other .NET implementation, such as .NET Core, your library should target [.NET Standard 2.0](https://docs.microsoft.com/dotnet/standard/net-standard), and we want to run inside Visual Studio which runs on .NET Framework. .NET Framework doesn't support .NET Standard 2.1.
+If you want to share a code between .NET Framework and any other .NET implementation, such as .NET Core, your library should target [.NET Standard 2.0](https://docs.microsoft.com/dotnet/standard/net-standard), and we want to run inside Visual Studio which runs on .NET Framework. .NET Framework doesn't support .NET Standard 2.1.
 
 ## Step 2, create the AppSettingStronglyTyped MSBuild Custom Task
 
@@ -162,9 +162,9 @@ Then, the dependencies of your MSBuild task must be packaged inside the package,
 
 We recommend first reading the basics about [props and target](https://docs.microsoft.com/visualstudio/msbuild/customize-your-build) and then how to [include props and targets on a NuGet](https://docs.microsoft.com/nuget/create-packages/creating-a-package#include-msbuild-props-and-targets-in-a-package).
 
-In some cases, you might want to add custom build targets or properties in projects that consume your package, such as running a custom tool or process during build. You do this by placing files in the form <package_id>.targets or <package_id>.props within the \build folder of the project.
+In some cases, you might want to add custom build targets or properties in projects that consume your package, such as running a custom tool or process during the build. You do this by placing files in the form <package_id>.targets or <package_id>.props within the \build folder of the project.
 Files in the root \build folder are considered suitable for all target frameworks.
-In this next step we’ll wire up the task implementation in a .props and .targets file, which will be included in our NuGet package and automatically loaded from a referencing project.
+In this next step, we’ll wire up the task implementation in a .props and .targets file, which will be included in our NuGet package and automatically loaded from a referencing project.
 First, we should modify the AppSettingStronglyTyped.csproj, adding
 
 ```xml
@@ -210,9 +210,9 @@ _AppSettingStronglyTyped.props_ includes the task and define some prop with defa
 </Project>
 ```
 
-Beyond the [build properties](https://docs.microsoft.com/visualstudio/msbuild/walkthrough-using-msbuild#build-properties) defined, actually, an important part of this file is the task registration, MSBuild must know how to locate and run the assembly that contains the task class. Tasks are registered using the [UsingTask element (MSBuild)](https://docs.microsoft.com/visualstudio/msbuild/usingtask-element-msbuild). TaskName is the name of the task to reference from the assembly. This attribute should always specify full namespaces. AssemblyFile is the file path of the assembly.
+Beyond the [build properties](https://docs.microsoft.com/visualstudio/msbuild/walkthrough-using-msbuild#build-properties) defined, an important part of this file is the task registration, MSBuild must know how to locate and run the assembly that contains the task class. Tasks are registered using the [UsingTask element (MSBuild)](https://docs.microsoft.com/visualstudio/msbuild/usingtask-element-msbuild). TaskName is the name of the task to reference from the assembly. This attribute should always specify full namespaces. AssemblyFile is the file path of the assembly.
 
-The _AppSettingStronglyTyped.props_ will be automatically included when the package is installed, then our client has the task available and some default values. However, it is never used. In order to put this code in action we need to define some targets on _AppSettingStronglyTyped.targets_ file which also will be also automatically included when the package is install:
+The _AppSettingStronglyTyped.props_ will be automatically included when the package is installed, then our client has the task available and some default values. However, it is never used. In order to put this code in action we need to define some targets on _AppSettingStronglyTyped.targets_ file which also will be automatically included when the package is installed:
 
 ```xml
 <?xml version="1.0" encoding="utf-8" ?>
@@ -243,7 +243,7 @@ The _AppSettingStronglyTyped.props_ will be automatically included when the pack
 </Project>
 ```
 
-The first step is the creation of an [InputGroup](https://docs.microsoft.com/visualstudio/msbuild/msbuild-items) which represents the text files (there could be more than one) to read and it will be some of our task parameters. There are default for the location and the extension where we look for, but you can override the values defining the properties on the client MSBuild project file.
+The first step is the creation of an [InputGroup](https://docs.microsoft.com/visualstudio/msbuild/msbuild-items) which represents the text files (there could be more than one) to read and it will be some of our task parameters. There are defaults for the location and the extension where we look for, but you can override the values defining the properties on the client MSBuild project file.
 
 Then we define two [MSBuild targets](https://docs.microsoft.com/visualstudio/msbuild/msbuild-targets). We [extends the MSBuild process](https://docs.microsoft.com/visualstudio/msbuild/how-to-extend-the-visual-studio-build-process) overriding predefined targets:
 
@@ -269,7 +269,7 @@ Congrats!! You must have `\AppSettingStronglyTyped\AppSettingStronglyTyped\AppSe
 Now, we are going to create a standard .Net Core console app for testing the NuGet package generated.
 :warning: We need to avoid generating a MSBuild custom task in the same MSBuild process which is going to consume it. The new project should be in a completely different Visual Studio Solution or the new project uses a dll pre-generated and re-located from the standard output.
 We could call MSBuildConsoleExample the new project on a new Visual Studio Solution.
-We must import the AppSettingStronglyTyped NuGet. We need to define a new package source and define a local folder as package source, [please follow the instructions](https://docs.microsoft.com/nuget/consume-packages/install-use-packages-visual-studio#package-sources). Then copy our NuGet package on that folder and install it on our console app.
+We must import the AppSettingStronglyTyped NuGet. We need to define a new package source and define a local folder as a package source, [please follow the instructions](https://docs.microsoft.com/nuget/consume-packages/install-use-packages-visual-studio#package-sources). Then copy our NuGet package on that folder and install it on our console app.
 
 Then, we should rebuild to be sure everything is ok.
 
@@ -289,7 +289,7 @@ The class _MySetting_ is in the _example_ namespace, we are going to redefine to
 	</PropertyGroup>
 ```
 
-Now, we are going to rebuild again and the class is on _MSBuildConsoleExample_ namespace. In this way you can redefine the generated class name(SettingClass), the text extension files(SettingExtensionFile) to be use as input and the location (RootFolder) of them if you like.
+Now, we are going to rebuild again and the class is on _MSBuildConsoleExample_ namespace. In this way you can redefine the generated class name(SettingClass), the text extension files(SettingExtensionFile) to be used as input and the location (RootFolder) of them if you like.
 
 Go to Program.cs and change the hardcoded 'Hello Word!!' to our constant
 
@@ -302,7 +302,7 @@ Go to Program.cs and change the hardcoded 'Hello Word!!' to our constant
 
 We can execute the program, it will greet our generated class.
 
-_Note:_ It is a good practice include **PrivateAssets="All"** on the PackageReference. The project which use the MSBuild Custom Task as NuGet. It should look like
+_Note:_ It is a good practice to include **PrivateAssets="All"** on the PackageReference, on the project which use the MSBuild Custom Task as NuGet. It should look like
 
 ```xml
 <ItemGroup>
